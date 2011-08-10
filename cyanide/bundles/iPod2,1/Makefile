@@ -1,5 +1,12 @@
+DIRS=$(shell find . -type d -d 1)
+
 all:
-	make -C 8B117
+	@for d in $(DIRS); do \
+		echo "        Building $$d payload..."; \
+		make -C $$d; \
+	done
 	
 clean:
-	make clean -C 8B117
+	@for d in $(DIRS); do \
+		make -C $$d clean; \
+	done

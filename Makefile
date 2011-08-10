@@ -1,10 +1,13 @@
-
 all:
+	@mkdir -p build/exploits/
+	@mkdir -p build/payloads/cyanide/
+	@mkdir -p build/files/common/
 	@make -C cyanide/
-	@cp -R cyanide/payloads includes/
+	@cp -R cyanide/payloads/* build/payloads/cyanide/
 	@make -C exploits/
-
+	@cp exploits/*.dylib build/exploits/
+	
 clean:
+	@rm -rf build/
 	@make -C cyanide/ clean
-	@rm -rf includes/payloads/
 	@make -C exploits/ clean
