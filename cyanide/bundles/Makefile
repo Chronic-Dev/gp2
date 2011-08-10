@@ -1,20 +1,13 @@
+DIRS=$(shell find . -type d -d 1)
+
 all:
-	make -C iPad1,1
-	make -C iPhone2,1
-	make -C iPhone3,1
-	make -C iPhone3,3
-	make -C iPod2,1
-	make -C iPod3,1
-	make -C iPod4,1
-	make -C AppleTV2,1
+	@for d in $(DIRS); do \
+		echo "Building $$d Payloads..."; \
+		make -C $$d; \
+		echo "[DONE]"; \
+	done
 
 clean:
-	make clean -C iPad1,1
-	make clean -C iPhone2,1
-	make clean -C iPhone3,1
-	make clean -C iPhone3,3
-	make clean -C iPod2,1
-	make clean -C iPod3,1
-	make clean -C iPod4,1
-	make clean -C AppleTV2,1
-	
+	@for d in $(DIRS); do \
+		make -C $$d clean; \
+	done
