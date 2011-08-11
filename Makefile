@@ -1,7 +1,7 @@
 all:
 	@mkdir -p build/exploits/
 	@mkdir -p build/payloads/cyanide/
-	@mkdir -p build/files/common/
+	@mkdir -p build/files/
 	@make -C cyanide/
 	@cp -R cyanide/payloads/* build/payloads/cyanide/
 	@make -C exploits/
