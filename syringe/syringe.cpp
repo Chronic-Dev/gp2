@@ -54,7 +54,7 @@ int Syringe::preloadExploits() {
 		}
 	}
 	if (usableExploitCount == 0)
-		throw new SyringeBubble("Failed to find any suitable exploit for this device/firmware combo.");
+		throw SyringeBubble("Failed to find any suitable exploit for this device/firmware combo.");
 	return usableExploitCount;
 
 }
@@ -109,10 +109,10 @@ int Syringe::deviceIsReady() {
 }
 
 void Syringe::inject(int arg) {
-/*	if (_exploit() != 0) {
-		throw new SyringeBubble("Unable to inject exploit");
+	if (_exploit() != 0) {
+		throw SyringeBubble("Unable to inject exploit");
 	}
-
+/*
 	debug("Preparing to upload iBSS\n");
 	upload_ibss();
 
