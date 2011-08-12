@@ -82,7 +82,7 @@ void Syringe::loadExploit(int num) {
 
 }
 
-int Syringe::deviceIsReady() {
+bool Syringe::deviceIsReady() {
 /*
 	irecv_error_t error = IRECV_E_SUCCESS;
 
@@ -105,7 +105,7 @@ int Syringe::deviceIsReady() {
 		return -1;
 	}
 */
-	return 0;
+	return true;
 }
 
 void Syringe::inject(int arg) {

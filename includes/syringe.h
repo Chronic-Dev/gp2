@@ -27,7 +27,7 @@ class Syringe {
 		int preloadExploits();
 		char *getExploitName(int num);
 		void loadExploit(int num);
-		int deviceIsReady();
+		bool deviceIsReady();
 		void inject(int arg);
 	private:
 		int getExploitCount();
