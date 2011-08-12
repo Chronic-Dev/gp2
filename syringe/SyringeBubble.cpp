@@ -3,6 +3,10 @@
 #include <cstring>
 using namespace std;
 
+SyringeBubble::SyringeBubble() {
+	SyringeBubble("");
+}
+
 SyringeBubble::SyringeBubble(char *err) {
 	error = NULL;
 	int len = strlen(err);

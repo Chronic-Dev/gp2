@@ -2,6 +2,7 @@
 
 class SyringeBubble {
 	public:
+		SyringeBubble();
 		SyringeBubble(char *err);
 		~SyringeBubble();
 		char *getError();
