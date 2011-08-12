@@ -11,8 +11,12 @@ all:
 	@cp doctors/cli/injectpois0n build/
 
 clean:
+	@echo "Cleaning..."
 	@rm -rf build/
 	@make -C cyanide/ clean
 	@make -C exploits/ clean
 	@make -C syringe/ clean
 	@make -C doctors/ clean
+
+package: all
+	@echo "Building Package..."
