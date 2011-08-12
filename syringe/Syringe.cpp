@@ -9,6 +9,7 @@ Syringe::Syringe(iDeviceTarget device, iDeviceFirmware firmware) {
 	_getExploitType = NULL;
 	_getExploitName = NULL;
 	_exploit = NULL;
+	exploitLoaded = false;
 	//Start real code
 	pois0n_device = device;
 	pois0n_firmware = firmware;
@@ -59,11 +60,15 @@ int Syringe::preloadExploits() {
 }
 
 char *Syringe::getExploitName(int num) {
+	if (!(usableExploitCount > 0 && num < usableExploitCount))
+		throw SyringeBubble("Exploit index not found");
 	_getExploitName = (getExploitName_t)dlsym(usableExploits[num], "getExploitName");
 	return _getExploitName();
 }
 
 void Syringe::loadExploit(int num) {
+	if (!(usableExploitCount > 0 && num < usableExploitCount))
+		throw SyringeBubble("Exploit index not found");
 	int i;
 	for (i = 0; i < usableExploitCount; i++) {
 		if (i != num) {
@@ -78,7 +83,13 @@ void Syringe::loadExploit(int num) {
 		}
 	}
 	exploitNum = num;
+	exploitLoaded = true;
+}
 
+ExploitType Syringe::getExploitType() {
+	if (!exploitLoaded)
+		throw SyringeBubble("No exploit loaded");
+	return _getExploitType();
 }
 
 bool Syringe::deviceIsReady() {
@@ -108,6 +119,9 @@ bool Syringe::deviceIsReady() {
 }
 
 void Syringe::inject(int arg) {
+	if (!exploitLoaded)
+		throw SyringeBubble("No exploit loaded");
+
 	if (_exploit() != 0) {
 		throw SyringeBubble("Unable to inject exploit");
 	}

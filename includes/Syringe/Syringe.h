@@ -28,6 +28,7 @@ class Syringe {
 		int preloadExploits();
 		char *getExploitName(int num);
 		void loadExploit(int num);
+		ExploitType getExploitType();
 		bool deviceIsReady();
 		void inject(int arg);
 	private:
@@ -44,6 +45,7 @@ class Syringe {
 		getExploitType_t _getExploitType;
 		getExploitName_t _getExploitName;
 		exploit_t _exploit;
-
+		//Status variables
+		bool exploitLoaded;
 };
 
