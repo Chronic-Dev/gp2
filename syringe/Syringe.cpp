@@ -1,5 +1,4 @@
-#include <syringe.h>
-#include <SyringeBubble.h>
+#include <Syringe/Syringe.h>
 #include <libirecovery.h>
 
 Syringe::Syringe(iDeviceTarget device, iDeviceFirmware firmware) {

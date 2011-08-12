@@ -1,5 +1,4 @@
-#include <syringe.h>
-#include <SyringeBubble.h>
+#include <Syringe/Syringe.h>
 #include <iostream>
 
 using namespace std;
