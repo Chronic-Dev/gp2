@@ -21,6 +21,12 @@ int main(int argc, char **args) {
 		}
 		cout << "Loading " << injector->getExploitName(i) << "..." << endl;
 		injector->loadExploit(i);
+		ExploitType eType = injector->getExploitType();
+		if (eType == eBOOTROM) {
+			cout << "Please put your device in DFU mode..." << endl;
+		} else if (eType == eIBOOT) {
+			cout << "Please put your device in Recovery mode..." << endl;
+		}
 		while (!injector->deviceIsReady()) {
 			sleep(1);
 		}
