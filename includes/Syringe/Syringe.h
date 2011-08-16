@@ -1,4 +1,5 @@
 #include <exploit.h>
+#include "DeviceDetection.h"
 #include "SyringeBubble.h"
 #include <stdio.h>
 #include <string.h>
@@ -24,6 +25,7 @@ class Syringe {
 	public:
 		Syringe();
 		~Syringe();
+		char *getConnectedDeviceInfo();
 		void setProgressCallback();
 		int preloadExploits();
 		char *getExploitName(int num);
@@ -45,6 +47,7 @@ class Syringe {
 		getExploitType_t _getExploitType;
 		getExploitName_t _getExploitName;
 		exploit_t _exploit;
+		DeviceDetection *dd;
 		//Status variables
 		bool exploitLoaded;
 };

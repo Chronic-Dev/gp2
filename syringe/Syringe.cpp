@@ -1,5 +1,4 @@
 #include <Syringe/Syringe.h>
-#include <DeviceDetection.h>
 #include <libirecovery.h>
 
 #include <iostream>
@@ -16,7 +15,7 @@ Syringe::Syringe() {
 	exploitLoaded = false;
 	//Start real code
 	try {
-		DeviceDetection *dd = new DeviceDetection();
+		dd = new DeviceDetection();
 		pois0n_device = dd->getHardwareVersion();
 		pois0n_firmware = dd->getFirmwareVersion();
 	} catch (SyringeBubble &b) {
@@ -37,6 +36,17 @@ Syringe::Syringe() {
 
 Syringe::~Syringe() {
 
+}
+
+char *Syringe::getConnectedDeviceInfo() {
+	int size;
+	char *ret;
+	char *fw = dd->getFirmwareVersionString();
+	char *devicename = dd->getDeviceNameString();
+	size = strlen(fw) + strlen(devicename) + 4;
+	ret = (char *)malloc(size * sizeof(char));
+	sprintf(ret, "%s (%s)", devicename, fw);
+	return ret; //Dont forget to free me!
 }
 
 int Syringe::preloadExploits() {

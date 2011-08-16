@@ -1,4 +1,4 @@
-#include <DeviceDetection.h>
+#include <Syringe/DeviceDetection.h>
 #include <Syringe/SyringeBubble.h>
 #include <libimobiledevice/libimobiledevice.h>
 #include <libimobiledevice/lockdown.h>
@@ -63,6 +63,22 @@ iDeviceTarget DeviceDetection::getHardwareVersion() {
 
 iDeviceFirmware DeviceDetection::getFirmwareVersion() {
 	return fwVersion;
+}
+
+char *DeviceDetection::getHardwareVersionString() {
+	return hardwareversion;
+}
+
+char *DeviceDetection::getFirmwareVersionString() {
+	return firmwareversion;
+}
+
+char *DeviceDetection::getUDIDString() {
+	return udid;
+}
+
+char *DeviceDetection::getDeviceNameString() {
+	return devicename;
 }
 
 void DeviceDetection::assignValue(char *value, char *forKey) {
@@ -149,6 +165,8 @@ void DeviceDetection::assignValue(char *value, char *forKey) {
 		} else {
 			cout << "DEVELOPER MESSAGE: Unknown FirmwareVersion detected. Please fixme before release!" << endl;
 		}
+		firmwareversion = (char *)malloc(strlen(value) * sizeof(char));
+		strcpy(firmwareversion, value);
 	} else if (!strcmp(forKey,"DeviceName")) {
 		devicename = (char *)malloc(strlen(value) * sizeof(char));
 		strcpy(devicename, value);
@@ -176,6 +194,8 @@ void DeviceDetection::assignValue(char *value, char *forKey) {
 		} else {
 			cout << "DEVELOPER MESSAGE: Undefined hardware model. Please fixme before release!" << endl;
 		}
+		hardwareversion = (char*)malloc(strlen(value) * sizeof(char));
+		strcpy(hardwareversion, value);
 	} else if (!strcmp(forKey,"UniqueDeviceID")) {
 		udid = (char *)malloc(strlen(value) * sizeof(char));
 		strcpy(udid, value);
@@ -184,17 +204,3 @@ void DeviceDetection::assignValue(char *value, char *forKey) {
 	}
 }
 
-/*
-static void plist_node_to_string(plist_t node) {
-	char *s = NULL;
-	plist_type t;
-	if (!node)
-		return;
-	t = plist_get_node_type(node);
-	switch (t) {
-		case PLIST_STRING:
-			plist_get_string_val(node, &s);
-			break;
-	}
-}
-*/

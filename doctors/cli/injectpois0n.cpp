@@ -7,6 +7,8 @@ int main(int argc, char **args) {
 	int i = 0;
 	try {
 		Syringe *injector = new Syringe();
+		char *devinfo = injector->getConnectedDeviceInfo();
+		cout << "Found Device \"" << devinfo << "\" in Normal Mode" << endl;
 		exploitCount = injector->preloadExploits();
 		if (exploitCount > 1) {
 			cout << "Please select an exploit:" << endl;
