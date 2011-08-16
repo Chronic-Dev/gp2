@@ -1,7 +1,11 @@
 #include <Syringe/Syringe.h>
+#include <DeviceDetection.h>
 #include <libirecovery.h>
 
-Syringe::Syringe(iDeviceTarget device, iDeviceFirmware firmware) {
+#include <iostream>
+using namespace std;
+
+Syringe::Syringe() {
 	//Null out variables
 	usableExploitCount = 0;
 	_getRequiredFirmware = NULL;
@@ -11,13 +15,18 @@ Syringe::Syringe(iDeviceTarget device, iDeviceFirmware firmware) {
 	_exploit = NULL;
 	exploitLoaded = false;
 	//Start real code
-	pois0n_device = device;
-	pois0n_firmware = firmware;
+	try {
+		DeviceDetection *dd = new DeviceDetection();
+		pois0n_device = dd->getHardwareVersion();
+		pois0n_firmware = dd->getFirmwareVersion();
+	} catch (SyringeBubble &b) {
+		throw b;
+	}
 //	irecv_init();
 //	irecv_set_debug_level(SHOWDEBUGGING);
 	debug("Initializing libpois0n\n");
 #ifdef __APPLE__
-	system("killall -9 iTunesHelper");
+	system("killall -9 iTunesHelper 2>/dev/null");
 #endif
 #ifdef _WIN32
 	system("TASKKILL /F /IM iTunes.exe > NUL");
@@ -184,5 +193,7 @@ void Syringe::loadExploits(void **exploits, int exploitCount) {
 		}
 	}
 	closedir(dir);
+	if (i == 0)
+		throw SyringeBubble("Failed to find or load any exploits.");
 }
 

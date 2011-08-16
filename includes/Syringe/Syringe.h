@@ -22,7 +22,7 @@
 
 class Syringe {
 	public:
-		Syringe(iDeviceTarget device, iDeviceFirmware firmware);
+		Syringe();
 		~Syringe();
 		void setProgressCallback();
 		int preloadExploits();

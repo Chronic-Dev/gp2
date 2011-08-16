@@ -5,8 +5,8 @@ using namespace std;
 int main(int argc, char **args) {
 	int exploitCount = 0;
 	int i = 0;
-	Syringe *injector = new Syringe(iD_A4, idf_50);
 	try {
+		Syringe *injector = new Syringe();
 		exploitCount = injector->preloadExploits();
 		if (exploitCount > 1) {
 			cout << "Please select an exploit:" << endl;
