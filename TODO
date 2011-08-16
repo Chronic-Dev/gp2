@@ -5,6 +5,7 @@
 * Implement USB Transfer Proto Base-Class in Syringe++ (Jaywalker)
 * Add USB Transfer Proto to Syringe++ (westbaer)
 * In DeviceDetection::assignValue, Use plist with libplist rather than hardcoded values for detection things (Someone else please... :))
+* Figure out why the hell injectpois0n works properly and then wont for several minutes later (Jaywalker)
 
   /////////////////
  //   TESTING   //
