@@ -21,8 +21,8 @@ SyringeBubble::SyringeBubble(char *err) {
 }
 
 SyringeBubble::~SyringeBubble() {
-	if (error != NULL)
-		free(error);
+	//if (error != NULL)
+	//	free(error);
 }
 
 char *SyringeBubble::getError() {
