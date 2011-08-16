@@ -191,12 +191,12 @@ void Syringe::loadExploits(void **exploits, int exploitCount) {
 	while ((entry = readdir(dir))) {
 		if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, "..") && strstr(entry->d_name, ext) != NULL && i < exploitCount) {
 			path = (char *)malloc((strlen(exploitPath) + strlen(entry->d_name) + 1) * sizeof(char));
-			strcat(path, exploitPath);
+			strcpy(path, exploitPath);
 			strcat(path, entry->d_name);
 			exploits[i] = dlopen(path, RTLD_LAZY);
 			free(path);
 			if (exploits[i] == NULL) {
-				error("Failed to load exploit: %s\n", entry->d_name);
+				error("Failed to load exploit: %s (%s)\n", entry->d_name, dlerror());
 			} else {
 				i++;
 			}
