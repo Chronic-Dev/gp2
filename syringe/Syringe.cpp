@@ -21,8 +21,8 @@ Syringe::Syringe() {
 	} catch (SyringeBubble &b) {
 		throw b;
 	}
-//	irecv_init();
-//	irecv_set_debug_level(SHOWDEBUGGING);
+	irecv_init();
+	irecv_set_debug_level(SHOWDEBUGGING);
 	debug("Initializing libpois0n\n");
 #ifdef __APPLE__
 	system("killall -9 iTunesHelper 2>/dev/null");
@@ -35,7 +35,7 @@ Syringe::Syringe() {
 }
 
 Syringe::~Syringe() {
-	free(pois0n_build);
+	irecv_exit();
 }
 
 char *Syringe::getConnectedDeviceInfo() {
@@ -112,28 +112,21 @@ ExploitType Syringe::getExploitType() {
 }
 
 bool Syringe::deviceIsReady() {
-/*
+	irecv_init();	
 	irecv_error_t error = IRECV_E_SUCCESS;
+	irecv_client_t client = NULL;
 
-	//////////////////////////////////////
-	// Begin
-	// debug("Connecting to device\n");
 	error = irecv_open(&client);
 	if (error != IRECV_E_SUCCESS) {
-		debug("Device must be in DFU mode to continue\n");
-		return -1;
+		return false;
 	}
-	irecv_event_subscribe(client, IRECV_PROGRESS, &recovery_callback, NULL);
+	//irecv_event_subscribe(client, IRECV_PROGRESS, &recovery_callback, NULL);
 
-	//////////////////////////////////////
-	// Check device
-	// debug("Checking the device mode\n");
 	if (client->mode != kDfuMode) {
 		debug("Device must be in DFU mode to continue\n");
 		irecv_close(client);
-		return -1;
+		return false;
 	}
-*/
 	return true;
 }
 
