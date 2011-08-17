@@ -7,7 +7,7 @@ using namespace std;
 Syringe::Syringe() {
 	//Null out variables
 	usableExploitCount = 0;
-	_getRequiredFirmware = NULL;
+	_isBuildSupported = NULL;
 	_getTargets = NULL;
 	_getExploitType = NULL;
 	_getExploitName = NULL;
@@ -17,7 +17,7 @@ Syringe::Syringe() {
 	try {
 		dd = new DeviceDetection();
 		pois0n_device = dd->getHardwareVersion();
-		pois0n_firmware = dd->getFirmwareVersion();
+		pois0n_build = dd->getBuildVersion();
 	} catch (SyringeBubble &b) {
 		throw b;
 	}
@@ -35,7 +35,7 @@ Syringe::Syringe() {
 }
 
 Syringe::~Syringe() {
-
+	free(pois0n_build);
 }
 
 char *Syringe::getConnectedDeviceInfo() {
@@ -63,9 +63,9 @@ int Syringe::preloadExploits() {
 	//Now we go through each exploit and see which ones are available for this device...
 	usableExploits = (void **)malloc(exploitCount * sizeof(void*));
 	for (i = 0; i < exploitCount; i++) {
-		_getRequiredFirmware = (getRequiredFirmware_t)dlsym(exploits[i], "getRequiredFirmware");
+		_isBuildSupported = (isBuildSupported_t)dlsym(exploits[i], "isBuildSupported");
 		_getTargets = (getTargets_t)dlsym(exploits[i], "getTargets");
-		if ((pois0n_device & _getTargets()) && _getRequiredFirmware() == 1 || _getRequiredFirmware() & pois0n_firmware) {
+		if ((pois0n_device & _getTargets()) && _isBuildSupported(pois0n_build)) {
 			usableExploits[usableExploitCount] = exploits[i];
 			usableExploitCount++;
 		} else {
@@ -96,7 +96,7 @@ void Syringe::loadExploit(int num) {
 			//Make sure all of our prototypes point to the current exploit's functions
 			_getExploitName = (getExploitName_t)dlsym(usableExploits[num], "getExploitName");
 			_getExploitType = (getExploitType_t)dlsym(usableExploits[num], "getExploitType");
-			_getRequiredFirmware = (getRequiredFirmware_t)dlsym(usableExploits[num], "getRequiredFirmware");
+			_isBuildSupported = (isBuildSupported_t)dlsym(usableExploits[num], "isBuildSupported");
 			_getTargets = (getTargets_t)dlsym(usableExploits[num], "getTargets");
 			_exploit = (exploit_t)dlsym(usableExploits[num], "exploit");
 		}

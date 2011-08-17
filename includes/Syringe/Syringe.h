@@ -38,11 +38,11 @@ class Syringe {
 		void loadExploits(void **exploits, int exploitCount);
 		//Variables
 		iDeviceTarget pois0n_device;
-		iDeviceFirmware pois0n_firmware;
+		char *pois0n_build;
 		void **usableExploits;
 		int exploitNum;
 		int usableExploitCount;
-		getRequiredFirmware_t _getRequiredFirmware;
+		isBuildSupported_t _isBuildSupported;
 		getTargets_t _getTargets;
 		getExploitType_t _getExploitType;
 		getExploitName_t _getExploitName;

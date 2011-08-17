@@ -1,6 +1,6 @@
 all:
 	@echo "Building cli doctor..."
-	@g++ -I../../includes/ -L/usr/local/lib -L/opt/local/lib -lplist -limobiledevice -ggdb -o injectpois0n *.cpp ../../syringe/*.o
+	@g++ -I../../includes/ -ggdb -o injectpois0n -m32 -lxml2 -lz *.cpp ../../libs/*.a ../../syringe/*.o
 
 clean:
 	@rm injectpois0n

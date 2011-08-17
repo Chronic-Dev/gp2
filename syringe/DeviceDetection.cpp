@@ -55,14 +55,19 @@ DeviceDetection::DeviceDetection() {
 
 DeviceDetection::~DeviceDetection() {
 	//idevice_free(phone);
+	free(buildVersion);
+	free(udid);
+	free(devicename);
+	free(hardwareversion);
+	free(firmwareversion);
 }
 
 iDeviceTarget DeviceDetection::getHardwareVersion() {
 	return hwVersion;
 }
 
-iDeviceFirmware DeviceDetection::getFirmwareVersion() {
-	return fwVersion;
+char *DeviceDetection::getBuildVersion() {
+	return buildVersion;
 }
 
 char *DeviceDetection::getHardwareVersionString() {
@@ -84,87 +89,9 @@ char *DeviceDetection::getDeviceNameString() {
 void DeviceDetection::assignValue(char *value, char *forKey) {
 	string val(value);
 	if (!strcmp(forKey,"BuildVersion")) {
-		
+		buildVersion = (char *)malloc(strlen(value) * sizeof(char));
+		strcpy(buildVersion, value);
 	} else if (!strcmp(forKey,"ProductVersion")) {
-		if (val == "1.0") {
-			fwVersion = idf_10; 
-		} else if (val == "1.0.0") {
-			fwVersion = idf_100; 
-		} else if (val == "1.0.1") {
-			fwVersion = idf_101; 
-		} else if (val == "1.0.2") {
-			fwVersion = idf_102; 
-		} else if (val == "1.1.1") {
-			fwVersion = idf_111; 
-		} else if (val == "1.1.2") {
-			fwVersion = idf_112; 
-		} else if (val == "1.1.3") {
-			fwVersion = idf_113; 
-		} else if (val == "1.1.4") {
-			fwVersion = idf_114; 
-		} else if (val == "2.0") {
-			fwVersion = idf_20; 
-		} else if (val == "2.0.1") {
-			fwVersion = idf_201; 
-		} else if (val == "2.0.2") {
-			fwVersion = idf_202; 
-		} else if (val == "2.1") {
-			fwVersion = idf_21; 
-		} else if (val == "2.2") {
-			fwVersion = idf_22; 
-		} else if (val == "2.2.1") {
-			fwVersion = idf_221; 
-		} else if (val == "3.0") {
-			fwVersion = idf_30; 
-		} else if (val == "3.0.1") {
-			fwVersion = idf_301; 
-		} else if (val == "3.1") {
-			fwVersion = idf_31; 
-		} else if (val == "3.1.2") {
-			fwVersion = idf_312; 
-		} else if (val == "3.1.3") {
-			fwVersion = idf_313; 
-		} else if (val == "3.2") {
-			fwVersion = idf_32; 
-		} else if (val == "3.2.1") {
-			fwVersion = idf_321; 
-		} else if (val == "3.2.2") {
-			fwVersion = idf_322; 
-		} else if (val == "4.0") {
-			fwVersion = idf_40; 
-		} else if (val == "4.0.1") {
-			fwVersion = idf_401; 
-		} else if (val == "4.0.2") {
-			fwVersion = idf_402; 
-		} else if (val == "4.1") {
-			fwVersion = idf_41; 
-		} else if (val == "4.2.1") {
-			fwVersion = idf_421; 
-		} else if (val == "4.2.5") {
-			fwVersion = idf_425; 
-		} else if (val == "4.2.6") {
-			fwVersion = idf_426; 
-		} else if (val == "4.2.7") {
-			fwVersion = idf_427; 
-		} else if (val == "4.2.8") {
-			fwVersion = idf_428; 
-		} else if (val == "4.3") {
-			fwVersion = idf_43; 
-		} else if (val == "4.3.1") {
-			fwVersion = idf_431; 
-		} else if (val == "4.3.2") {
-			fwVersion = idf_432; 
-		} else if (val == "4.3.3") {
-			fwVersion = idf_433; 
-		} else if (val == "4.3.4") {
-			fwVersion = idf_434; 
-		} else if (val == "4.3.5") {
-			fwVersion = idf_435; 
-		} else if (val == "5.0") {
-			fwVersion = idf_50;
-		} else {
-			cout << "DEVELOPER MESSAGE: Unknown FirmwareVersion detected. Please fixme before release!" << endl;
-		}
 		firmwareversion = (char *)malloc(strlen(value) * sizeof(char));
 		strcpy(firmwareversion, value);
 	} else if (!strcmp(forKey,"DeviceName")) {

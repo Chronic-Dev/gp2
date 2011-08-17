@@ -5,7 +5,7 @@ class DeviceDetection {
 		DeviceDetection();
 		~DeviceDetection();
 		iDeviceTarget getHardwareVersion();
-		iDeviceFirmware getFirmwareVersion();
+		char *getBuildVersion();
 		char *getHardwareVersionString();
 		char *getFirmwareVersionString();
 		char *getDeviceNameString();
@@ -13,7 +13,7 @@ class DeviceDetection {
 	private:
 		void assignValue(char *value, char *forKey);
 		iDeviceTarget hwVersion;
-		iDeviceFirmware fwVersion;
+		char *buildVersion;
 		char *hardwareversion;
 		char *firmwareversion;
 		char *devicename;
