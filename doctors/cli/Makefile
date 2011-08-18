@@ -1,5 +1,8 @@
+OS=osx
+
 all:
-	@echo "Building..."
+	@echo "Building cli doctor..."
+	@g++ -I../../includes/ -ggdb -o injectpois0n -m32 -lxml2 -lz -framework IOKit -framework Foundation -lcurl *.cpp ../../libs/$(OS)/*.a ../../libs/*.o ../../syringe/*.o
 
 clean:
-	@echo "Cleaning..."
+	@rm injectpois0n

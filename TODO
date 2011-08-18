@@ -1,0 +1,18 @@
+* Implement Syringe in C++ with dynamic library loading (Jaywalker)
+* Implement Userland communications in Syringe++ (Jaywalker)
+* Ensure Syringe++ is Cross-Platform (dyld, etc.) (Jaywalker)
+* Implement USB Transfer Library for Anthrax (westbaer)
+* Implement USB Transfer Proto Base-Class in Syringe++ (Jaywalker)
+* Add USB Transfer Proto to Syringe++ (westbaer)
+* In DeviceDetection::assignValue, Use plist with libplist rather than hardcoded values for detection things (Someone else please... :))
+
+  /////////////////
+ //   TESTING   //
+/////////////////
+* Test on Win32
+* Test on Win64
+* Test on Linux32
+* Test on Linux64
+* Test on OS X Leopard
+* Test on OS X Snow Leopard
+* Test on OS X Lion
