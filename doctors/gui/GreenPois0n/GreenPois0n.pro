@@ -11,3 +11,6 @@ INCLUDEPATH += .
 HEADERS += gpmainwindow.h
 FORMS += gpmainwindow.ui
 SOURCES += gpmainwindow.cpp main.cpp
+
+RESOURCES += \
+    images.qrc
