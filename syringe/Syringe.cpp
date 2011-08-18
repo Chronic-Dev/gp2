@@ -35,7 +35,6 @@ Syringe::Syringe() {
 }
 
 Syringe::~Syringe() {
-	irecv_exit();
 }
 
 char *Syringe::getConnectedDeviceInfo() {
@@ -127,10 +126,12 @@ bool Syringe::deviceIsReady() {
 		irecv_close(client);
 		return false;
 	}
+	irecv_close(client);
 	return true;
 }
 
 void Syringe::inject(int arg) {
+	irecv_exit();
 	if (!exploitLoaded)
 		throw SyringeBubble("No exploit loaded");
 
