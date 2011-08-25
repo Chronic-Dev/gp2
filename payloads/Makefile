@@ -1,5 +1,7 @@
 all:
 	@make -C cyanide/
-	#Add our userland ROP payload thing here
+	@make -C conium/
+
 clean:
 	@make -C cyanide/ clean
+	@make -C conium/ clean
