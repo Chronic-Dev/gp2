@@ -28,6 +28,7 @@ extern "C" {
 
 #include <inttypes.h>
 #include <curl/curl.h>
+#include <string.h>
 
 #ifdef _MSC_VER
 #define STATIC_INLINE static __inline
