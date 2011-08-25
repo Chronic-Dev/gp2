@@ -3,8 +3,8 @@ all:
 	@mkdir -p build/payloads/cyanide/
 	@mkdir -p build/files/
 	@make -C libs/
-	@make -C cyanide/
-	@cp -R cyanide/payloads/* build/payloads/cyanide/
+	@make -C payloads/
+	@cp -R payloads/cyanide/payloads/* build/payloads/cyanide/
 	@make -C exploits/
 	@cp exploits/*.dylib build/exploits/
 	@make -C syringe/
@@ -15,7 +15,7 @@ clean:
 	@echo "Cleaning..."
 	@rm -rf build/
 	@make -C libs/ clean
-	@make -C cyanide/ clean
+	@make -C payloads/ clean
 	@make -C exploits/ clean
 	@make -C syringe/ clean
 	@make -C doctors/ clean
