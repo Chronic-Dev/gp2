@@ -47,6 +47,10 @@ char *Syringe::getConnectedDeviceInfo() {
 	return ret; //Dont forget to free me!
 }
 
+void setProgressCallback() {
+	//TODO: Implement me
+}
+
 int Syringe::preloadExploits() {
 	int exploitCount = 0;
 	int i = 0;
@@ -73,7 +77,6 @@ int Syringe::preloadExploits() {
 	if (usableExploitCount == 0)
 		throw SyringeBubble("Failed to find any suitable exploit for this device/firmware combo.");
 	return usableExploitCount;
-
 }
 
 char *Syringe::getExploitName(int num) {
@@ -110,6 +113,11 @@ ExploitType Syringe::getExploitType() {
 }
 
 bool Syringe::deviceIsReady() {
+	try {
+		ExploitType etype = getExploitType();
+	} catch (SyringeBubble &b) {
+		throw b;
+	}
 	irecv_init();	
 	irecv_error_t error = IRECV_E_SUCCESS;
 	irecv_client_t client = NULL;
@@ -120,10 +128,18 @@ bool Syringe::deviceIsReady() {
 	}
 	//irecv_event_subscribe(client, IRECV_PROGRESS, &recovery_callback, NULL);
 
-	if (client->mode != kDfuMode) {
-		debug("Device must be in DFU mode to continue\n");
-		irecv_close(client);
-		return false;
+	if (etype == E_BOOTROM) {
+		if (client->mode != kDfuMode) {
+			debug("Device must be in DFU mode to continue\n");
+			irecv_close(client);
+			return false;
+		}
+	} else if (etype == E_IBOOT) {
+		if (client->mode != kRecoveryMode1 && client->mode != kRecoveryMode2 && client->mode != kRecoveryMode3 && client->mode != kRecoveryMode4) {
+			debug("Device must be in Recovery mode to continue\n");
+			irecv_close(client);
+			return false;
+		}
 	}
 	irecv_close(client);
 	return true;
