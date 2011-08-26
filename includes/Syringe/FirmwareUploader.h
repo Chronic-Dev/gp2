@@ -1,6 +1,7 @@
 #include <libirecovery.h>
 
 typedef enum {
+	U_INJECT_ONLY = 0,
 	U_IBSS_ONLY = 1,
 	U_IBSS_PATCHED = 2,
 	U_IBEC = 3,

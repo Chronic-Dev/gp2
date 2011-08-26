@@ -33,7 +33,7 @@ int main(int argc, char **args) {
 			sleep(1);
 		}
 		cout << "Injecting..." << endl;
-		injector->inject(0);
+		injector->inject(U_IBSS_ONLY);
 		cout << "Done!" << endl;
 	} catch (SyringeBubble &bubble) {
 		cout << bubble.getError() << endl;

@@ -1,6 +1,7 @@
 #include <exploit.h>
 #include "DeviceDetection.h"
 #include "SyringeBubble.h"
+#include "FirmwareUploader.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -32,7 +33,7 @@ class Syringe {
 		void loadExploit(int num);
 		ExploitType getExploitType();
 		bool deviceIsReady();
-		void inject(int arg);
+		void inject(UploadArgs arg);
 	private:
 		int getExploitCount();
 		void loadExploits(void **exploits, int exploitCount);

@@ -1,6 +1,5 @@
 #include <Syringe/Syringe.h>
 #include <libirecovery.h>
-
 #include <iostream>
 using namespace std;
 
@@ -130,7 +129,7 @@ bool Syringe::deviceIsReady() {
 	return true;
 }
 
-void Syringe::inject(int arg) {
+void Syringe::inject(UploadArgs arg) {
 	irecv_exit();
 	if (!exploitLoaded)
 		throw SyringeBubble("No exploit loaded");
@@ -138,29 +137,16 @@ void Syringe::inject(int arg) {
 	if (_exploit() != 0) {
 		throw SyringeBubble("Unable to inject exploit");
 	}
-/*
-	debug("Preparing to upload iBSS\n");
-	upload_ibss();
 
-	debug("Reconnecting to device\n");
-	client = irecv_reconnect(client, 10);
-	if (client == NULL) {
-		error("Unable to reconnect\n");
-		return -1;
+	if (arg > U_INJECT_ONLY) {
+		try {
+			FirmwareUploader *fwu = new FirmwareUploader();
+			fwu->UploadFirmware(arg);
+			delete fwu;
+		} catch (SyringeBubble &b) {
+			throw b;
+		}
 	}
-
-	debug("Preparing to upload iBSS payload\n");
-	if (upload_ibss_payload() < 0) {
-		error("Unable to upload iBSS payload\n");
-		return -1;
-	}
-
-	debug("Executing iBSS payload\n");
-	if (execute_ibss_payload(arg) < 0) {
-		error("Unable to execute iBSS payload\n");
-		return -1;
-	}
-*/
 }
 
 //Private Functions

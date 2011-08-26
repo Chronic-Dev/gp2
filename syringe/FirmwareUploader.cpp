@@ -1,6 +1,6 @@
-#include <FirmwareUploader.h>
+#include <Syringe/FirmwareUploader.h>
 #include <cstdlib>
-//#include <libpartial.h>
+#include <libpartial.h>
 #include <Syringe/SyringeBubble.h>
 #include <cstring>
 #include <iostream>
@@ -94,11 +94,10 @@ void FirmwareUploader::FetchImage(char *type, char *output) {
 		snprintf(name, 63, "%s.%s.img3", type, device->model);
 		snprintf(path, 254, "Firmware/all_flash/all_flash.%s.production/%s", device->model, name);
 	}
-/*
+
 	if (download_file_from_zip(device->url, path, output, NULL) != 0) { //TODO: Enable &download_callback (NULL for now)
 		throw SyringeBubble("Failed to download image. Check your network connection!");
 	}
-	*/
 }
 
 void FirmwareUploader::UploadImagePayload(char *type) {
