@@ -37,7 +37,7 @@ DeviceDetection::DeviceDetection() {
 			if (node_type != PLIST_DICT && node_type != PLIST_ARRAY) {
 				plist_type t;
 				if (!node) {
-					cout << "Failure.. thow something here instead" << endl;
+					throw SyringeBubble("Node failure");
 				}
 
 				if (plist_get_node_type(node) == PLIST_STRING) {
