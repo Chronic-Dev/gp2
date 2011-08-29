@@ -31,27 +31,34 @@ FirmwareUploader::~FirmwareUploader() {
 }
 
 void FirmwareUploader::UploadFirmware(UploadArgs args) {
-	UploadImage("iBSS");
-	if (args > U_IBSS_ONLY) {
-		UploadImagePayload("iBSS");
-		if (args > U_IBSS_PATCHED) {
-			UploadImage("iBEC");
-			if (args > U_IBEC) {
-				UploadImagePayload("iBEC");
-				if (args > U_IBEC_PATCHED) {
-					UploadImage("iBoot");
-					if (args > U_IBOOT) {
-						UploadImagePayload("iBoot");
-						if (args > U_IBOOT_PATCHED) {
-							UploadRamdisk();
-							if (args > U_RAMDISK) {
-								UploadRamdiskFiles();
-							}
+	try {
+		if (device->mode == kDfu) { //We start with the iBSS
+			UploadImage("iBSS");
+			if (args > U_IBSS_ONLY) {
+				UploadImagePayload("iBSS");
+				if (args > U_IBSS_PATCHED) {
+					UploadImage("iBEC");
+					if (args > U_IBEC) {
+						UploadImagePayload("iBEC");
+						if (args > U_IBEC_PATCHED) {
+							UploadImage("iBoot");
 						}
 					}
 				}
 			}
 		}
+
+		if (args > U_IBOOT) {
+			UploadImagePayload("iBoot");
+			if (args > U_IBOOT_PATCHED) {
+				UploadRamdisk();
+				if (args > U_RAMDISK) {
+					UploadRamdiskFiles();
+				}
+			}
+		}
+	} catch (SyringeBubble &b) {
+		throw b;
 	}
 }
 
