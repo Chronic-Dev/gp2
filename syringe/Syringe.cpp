@@ -113,8 +113,9 @@ ExploitType Syringe::getExploitType() {
 }
 
 bool Syringe::deviceIsReady() {
+	ExploitType etype;
 	try {
-		ExploitType etype = getExploitType();
+		etype = getExploitType();
 	} catch (SyringeBubble &b) {
 		throw b;
 	}
@@ -128,13 +129,13 @@ bool Syringe::deviceIsReady() {
 	}
 	//irecv_event_subscribe(client, IRECV_PROGRESS, &recovery_callback, NULL);
 
-	if (etype == E_BOOTROM) {
+	if (etype == eBOOTROM) {
 		if (client->mode != kDfuMode) {
 			debug("Device must be in DFU mode to continue\n");
 			irecv_close(client);
 			return false;
 		}
-	} else if (etype == E_IBOOT) {
+	} else if (etype == eIBOOT) {
 		if (client->mode != kRecoveryMode1 && client->mode != kRecoveryMode2 && client->mode != kRecoveryMode3 && client->mode != kRecoveryMode4) {
 			debug("Device must be in Recovery mode to continue\n");
 			irecv_close(client);
