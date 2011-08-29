@@ -1,0 +1,9 @@
+*.o
+*.elf
+*payload
+injectpois0n
+build/
+limera1n.h
+*.dSYM
+*.dylib
+payloads/cyanide/payloads/
