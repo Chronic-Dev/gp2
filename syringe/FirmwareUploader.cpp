@@ -32,7 +32,7 @@ FirmwareUploader::~FirmwareUploader() {
 
 void FirmwareUploader::UploadFirmware(UploadArgs args) {
 	try {
-		if (client->mode != kDfuMode) { //We start with the iBSS
+		if (client->mode == kDfuMode) { //We start with the iBSS
 			UploadImage("iBSS");
 			if (args > U_IBSS_ONLY) {
 				UploadImagePayload("iBSS");
