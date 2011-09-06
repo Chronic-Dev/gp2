@@ -41,11 +41,11 @@ int(*kernel_atv_load)(char* boot_path, char** output) = NULL;
 int(*kernel_load)(void* input, int max_size, char** output) = NULL;
 
 void* find_kernel_bootargs() {
-	return find_string(TARGET_BASEADDR, TARGET_BASEADDR, 0x40000, "rd=md0");
+	return find_string(gBaseaddr, gBaseaddr, 0x40000, "rd=md0");
 }
 
 void* find_kernel_load() {
-	return find_function("kernel_load", TARGET_BASEADDR, TARGET_BASEADDR);
+	return find_function("kernel_load", gBaseaddr, gBaseaddr);
 }
 
 void* find_kernel_phymem() {
@@ -87,7 +87,7 @@ int kernel_cmd(int argc, CmdArg* argv) {
 	size = argv[3].uinteger;
 	address = (unsigned char*) argv[2].uinteger;
 	if(!strcmp(action, "load")) {
-		if(strstr((char*) (IBOOT_BASEADDR + 0x200), "k66ap")) {
+		if(strstr((char*) (gBootBaseaddr + 0x200), "k66ap")) {
 			printf("Loading AppleTV kernelcache from %s\n", KERNEL_PATH);
 			kernel_atv_load(KERNEL_PATH, &gKernelAddr);
 		} else {

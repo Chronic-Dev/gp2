@@ -34,7 +34,7 @@ void(*task_start)(TaskDescriptor* task) = NULL;
 TaskDescriptor*(*task_create)(char* name, Task task, void* arg, unsigned int stack) = NULL;
 
 void* find_task_yield() {
-	return find_function("task_yield", TARGET_BASEADDR, TARGET_BASEADDR);
+	return find_function("task_yield", gBaseaddr, gBaseaddr);
 }
 
 void* find_task_running() {
@@ -46,15 +46,15 @@ void* find_task_list() {
 }
 
 void* find_task_create() {
-	return find_function("task_create", TARGET_BASEADDR, TARGET_BASEADDR);
+	return find_function("task_create", gBaseaddr, gBaseaddr);
 }
 
 void* find_task_exit() {
-	return find_function("task_exit", TARGET_BASEADDR, TARGET_BASEADDR);
+	return find_function("task_exit", gBaseaddr, gBaseaddr);
 }
 
 void* find_task_start() {
-	unsigned int x = patch_find(TARGET_BASEADDR, 0x40000, "\x90\xB5\x01\xAF\x43\x69\x04\x46", 8);
+	unsigned int x = patch_find(gBaseaddr, 0x40000, "\x90\xB5\x01\xAF\x43\x69\x04\x46", 8);
 	return x+1;
 }
 

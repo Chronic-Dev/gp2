@@ -26,7 +26,7 @@ void(*fs_mount)(const char *partition, const char *type, const char *path) = NUL
 void(*fs_unmount)(const char *path) = SELF_FS_UNMOUNT;
 
 void* find_fs_mount() {
-	return find_function("fs_mount", TARGET_BASEADDR, TARGET_BASEADDR);
+	return find_function("fs_mount", gBaseaddr, gBaseaddr);
 }
 
 void* find_fs_unmount() {

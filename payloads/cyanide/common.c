@@ -43,12 +43,12 @@ void* find_printf() {
 	int j = 0;
 	unsigned int sp;
 	unsigned int* stack = &sp;
-	void(*default_block_write)(void) = find_function("default_block_write", TARGET_BASEADDR, TARGET_BASEADDR);
+	void(*default_block_write)(void) = find_function("default_block_write", gBaseaddr, gBaseaddr);
 	
 	default_block_write();
 	for(i = 0; i < 0x100; i += 4) {
 		unsigned int value = *(stack - i);
-		if((value & 0xFFF00000) == TARGET_BASEADDR) {
+		if((value & 0xFFF00000) == gBaseaddr) {
 			for(j = 0; j < 0x100; j++) {
 				unsigned short* instruction = (unsigned short*)(value + j);
 				if(*instruction == 0xB40F) {
@@ -63,11 +63,11 @@ void* find_printf() {
 }
 
 void* find_free() {
-	return find_function("free", TARGET_BASEADDR, TARGET_BASEADDR);
+	return find_function("free", gBaseaddr, gBaseaddr);
 }
 
 void* find_malloc() {
-	void* bytes = patch_find(TARGET_BASEADDR, 0x40000, "\x80\xB5\x00\xAF\x01\x21\x00\x22", 8);
+	void* bytes = patch_find(gBaseaddr, 0x40000, "\x80\xB5\x00\xAF\x01\x21\x00\x22", 8);
 	if (bytes==NULL) return NULL;
 	return bytes+1;
 }
@@ -76,15 +76,16 @@ int common_init() {
 
 	// Setup global device and firmware variables here
 	// Still need to add the framebuffer address here, or just look it up later on
+	// We could also look up loadaddr later on maybe
 	// m68ap = iPhone2g
-	if(strstr((char*) (IBOOT_BASEADDR + 0x200), "m68ap")) {
+	if(strstr((char*) (gBootBaseaddr + 0x200), "m68ap")) {
 		gLoadaddr = 0xDEADBEEF; // Fix Me!!
 		gRomBaseaddr = 0xDEADBEEF; // Fix Me!!
 		gBssBaseaddr = 0xDEADBEEF; // Fix Me!!
 		gBootBaseaddr = 0xDEADBEEF; // Fix Me!!
 		
 	// n88ap = iPhone3gs
-	} else if(strstr((char*) (IBOOT_BASEADDR + 0x200), "n88ap")) {	
+	} else if(strstr((char*) (gBootBaseaddr + 0x200), "n88ap")) {	
 		gLoadaddr = 0x41000000;
 		gRomBaseaddr = 0xBF000000;
 		gBssBaseaddr = 0x84000000;

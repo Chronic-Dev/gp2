@@ -308,7 +308,7 @@ int patch_firmware(unsigned char* address, int size) {
 		memcpy(cert_offset, patch_cert, 4);
 	}
 
-	unsigned char* image_load = find_function("image_load", LOADADDR, IBOOT_BASEADDR);
+	unsigned char* image_load = find_function("image_load", LOADADDR, gBootBaseaddr);
 	printf("Found image_load offset at %p\n", image_load);
 	if(image_load == NULL) {
 		printf("Unable to find image_load function\n");
@@ -330,7 +330,7 @@ int patch_firmware(unsigned char* address, int size) {
 		}
 	}
 
-	unsigned char* command = find_function("cmd_go", LOADADDR, IBOOT_BASEADDR);
+	unsigned char* command = find_function("cmd_go", LOADADDR, gBootBaseaddr);
 	if(command == NULL) {
 		printf("Unable to find command patch offset\n");
 	} else {
