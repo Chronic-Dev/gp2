@@ -23,7 +23,6 @@
 #include "common.h"
 #include "commands.h"
 #include "device.h"
-#include "offsets.h"
 
 int patch_init();
 int patch_cmd(int argc, CmdArg* argv);

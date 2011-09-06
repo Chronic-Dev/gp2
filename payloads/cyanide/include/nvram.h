@@ -22,7 +22,6 @@
 
 #include "common.h"
 #include "device.h"
-#include "offsets.h"
 #include "commands.h"
 
 typedef struct NvramVar {

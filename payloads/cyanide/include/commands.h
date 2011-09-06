@@ -21,7 +21,6 @@
 #define COMMANDS_H
 
 #include "device.h"
-#include "offsets.h"
 
 #define MAX_COMMANDS 40
 

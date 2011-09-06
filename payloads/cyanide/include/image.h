@@ -22,7 +22,6 @@
 
 #include "common.h"
 #include "device.h"
-#include "offsets.h"
 #include "commands.h"
 
 #define IMAGE_IMG3       0x496D6733

@@ -1,30 +1,5 @@
-CROSS ?= arm-elf-
-CC = $(CROSS)gcc
-LD = $(CROSS)ld
-SRC = .
-#BIN2C = $(SRC)/tools/bin2c
-LOADADDR = 0x42000000 
-TYPE = armv7
-OBJCOPY = $(CROSS)objcopy
-OBJECTS = entry.o main.o common.o commands.o task.o lock.o aes.o bdev.o image.o nvram.o filesystem.o kernel.o memory.o patch.o functions.o framebuffer.o breakpoint.o uart.o radio.o
-CFLAGS = -I. -I./.. -I./../.. -I./$(SRC)/include -nostdlib -mlittle-endian -w
-LDFLAGS = -Ttext=$(LOADADDR) -nostdlib -lc -lm -lgcc
-
-%.o: $(SRC)/%.S
-	@$(CC) -c $(<) -o $(@) $(INCLUDES) $(CFLAGS) 
-
-%.o: $(SRC)/%.c
-	@$(CC) -c $(<) -o $(@) $(INCLUDES) $(CFLAGS) 
-
-all: payload
-
-payload: payload.elf
-	@cp payload $(SRC)/payloads/cyanide.$(TYPE))
-	
-payload.elf: $(OBJECTS)
-	@$(CC) -o $(@) $(OBJECTS) $(LDFLAGS)
-	@$(OBJCOPY) -O binary $(@) payload
+all:
+	@make -C bundles/
 
 clean:
-	@rm -rf *.o *.elf payload
-	
+	@make -C bundles/ clean
