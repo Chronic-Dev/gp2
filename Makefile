@@ -1,4 +1,5 @@
 all:
+	@mkdir -p build
 	@mkdir -p build/exploits/
 	@mkdir -p build/payloads/cyanide/
 	@mkdir -p build/files/
