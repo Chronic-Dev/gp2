@@ -38,14 +38,13 @@ void* gBootBaseaddr = NULL;
 
 int cout_count = 0;
 
-
-
 void* find_printf() {
 	int i = 0;
 	int j = 0;
 	unsigned int sp;
 	unsigned int* stack = &sp;
 	void(*default_block_write)(void) = find_function("default_block_write", TARGET_BASEADDR, TARGET_BASEADDR);
+	
 	default_block_write();
 	for(i = 0; i < 0x100; i += 4) {
 		unsigned int value = *(stack - i);
@@ -74,12 +73,104 @@ void* find_malloc() {
 }
 
 int common_init() {
+
+	// Setup global device and firmware variables here
+	// Still need to add the framebuffer address here, or just look it up later on
+	// m68ap = iPhone2g
+	if(strstr((char*) (IBOOT_BASEADDR + 0x200), "m68ap")) {
+		gLoadaddr = 0xDEADBEEF; // Fix Me!!
+		gRomBaseaddr = 0xDEADBEEF; // Fix Me!!
+		gBssBaseaddr = 0xDEADBEEF; // Fix Me!!
+		gBootBaseaddr = 0xDEADBEEF; // Fix Me!!
+		
+	// n88ap = iPhone3gs
+	} else if(strstr((char*) (IBOOT_BASEADDR + 0x200), "n88ap")) {	
+		gLoadaddr = 0x41000000;
+		gRomBaseaddr = 0xBF000000;
+		gBssBaseaddr = 0x84000000;
+		gBootBaseaddr = 0x4FF00000;
+		
+	// n90ap, n92ap = iPhone4
+	} else if(strstr((char*) (0x200), "n90ap")
+		 || strstr((char*) (0x200), "n92ap")) {	
+		gLoadaddr = 0x41000000;
+		gRomBaseaddr = 0xBF000000;
+		gBssBaseaddr = 0x84000000;
+		gBootBaseaddr = 0x5FF00000;
+		
+	// n81ap = iPod4g
+		gLoadaddr = 0x41000000;
+		gRomBaseaddr = 0xBF000000;
+		gBssBaseaddr = 0x84000000;
+		gBootBaseaddr = 0x5FF00000;
+		
+	// n18ap = iPod3g
+	} else if(strstr((char*) (0x200), "n18ap")) {	
+		gLoadaddr = 0x41000000;
+		gRomBaseaddr = 0xBF000000;
+		gBssBaseaddr = 0x84000000;
+		gBootBaseaddr = 0x4FF00000;
+		
+	// n72ap = iPod2g
+	} else if(strstr((char*) (0x200), "n72ap")) {	
+		gLoadaddr = 0x09000000;
+		gRomBaseaddr = 0xDEADBEEF; // Fix Me!!
+		gBssBaseaddr = 0xDEADBEEF; // Fix Me!!
+		gBootBaseaddr = 0xFF000000; // Check Me!!
+		
+	// k48ap = iPad1
+	} else if(strstr((char*) (0x200), "k48ap")) {	
+		gLoadaddr = 0x41000000;
+		gRomBaseaddr = 0xBF000000;
+		gBssBaseaddr = 0x84000000;
+		gBootBaseaddr = 0x5FF00000;
+		
+	// k93ap, k94ap, k95ap = iPad2
+	} else if(strstr((char*) (0x200), "k93ap") ||
+				strstr((char*) (0x200), "k94ap") ||
+				strstr((char*) (0x200), "k95ap")) {	
+		gLoadaddr = 0xDEADBEEF; // Fix Me!!
+		gRomBaseaddr = 0xDEADBEEF; // Fix Me!!
+		gBssBaseaddr = 0xDEADBEEF; // Fix Me!!
+		gBootBaseaddr = 0xDEADBEEF; // Fix Me!!
+		
+	// k66ap = AppleTV
+	} else if(strstr((char*) (0x200), "k66ap")) {	
+		gLoadaddr = 0x41000000;
+		gRomBaseaddr = 0xBF000000;
+		gBssBaseaddr = 0x84000000;
+		gBootBaseaddr = 0x5FF00000;
+		
+	} else {	
+		gLoadaddr = NULL;
+		gRomBaseaddr = NULL;
+		gBssBaseaddr = NULL;
+		gBootBaseaddr = NULL;
+	}
+	
+
+	// Find our essential functions so we can printf!!
 	_printf = find_printf();
 	if(_printf == NULL) {
 		fb_print("Unable to find printf\n");
 		return -1;
 	} else {
 		printf("Found printf at 0x%x\n", _printf);
+	}
+	
+	if(strstr((char*) (gBootBaseaddr), "iBoot")) {	
+		printf("Found iBoot\n");
+		gBaseaddr = gBootBaseaddr;
+	} else if(strstr((char*) (gBootBaseaddr), "iBSS")) {
+		printf("Found iBSS\n");
+		gBaseaddr = gBssBaseaddr;
+	} else if(strstr((char*) (gBootBaseaddr), "iBEC")) {
+		printf("Found iBEC\n");
+		gBaseaddr = gBootBaseaddr;
+	} else {
+		printf("Unknown firmware found\n");
+		gBaseaddr = NULL;
+		return -1;
 	}
 
 	_malloc = find_malloc();
