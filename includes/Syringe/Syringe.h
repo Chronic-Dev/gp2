@@ -36,11 +36,11 @@ class Syringe {
 		Syringe();
 		/**
 		 * The Alternate Syringe Constructor without device detection. Useful for debugging
-		 * @param device an iDeviceTarget for the target device
+		 * @param dev an iDeviceTarget for the target device
 		 * @param build char * Build Version for the firmware on the device
 		 * @return A Syringe!!
 		 */
-		Syringe(iDeviceTarget device, char *build);
+		Syringe(iDeviceTarget dev, char *build);
 		/**
 		 * The Syringe Deconstructor.
 		 */

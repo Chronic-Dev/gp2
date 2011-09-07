@@ -6,9 +6,6 @@
 #include <iostream>
 
 FirmwareUploader::FirmwareUploader() {
-	irecv_client_t client = NULL;
-	irecv_device_t device = NULL;
-
 	irecv_init();
 	irecv_error_t error = IRECV_E_SUCCESS;
 	error = irecv_open(&client);
@@ -18,7 +15,7 @@ FirmwareUploader::FirmwareUploader() {
 	}
 
 	error = irecv_get_device(client, &device);
-	if (device == NULL) {
+	if (error != IRECV_E_SUCCESS) {
 		irecv_close(client);
 		irecv_exit();
 		throw SyringeBubble("Failed to get device");

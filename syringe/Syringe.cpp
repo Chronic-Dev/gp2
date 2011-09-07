@@ -32,7 +32,7 @@ Syringe::Syringe() {
 #endif
 }
 
-Syringe::Syringe(iDeviceTarget device, char *build) {
+Syringe::Syringe(iDeviceTarget dev, char *build) {
 	//Null out variables
 	usableExploitCount = 0;
 	_isBuildSupported = NULL;
@@ -42,7 +42,7 @@ Syringe::Syringe(iDeviceTarget device, char *build) {
 	_exploit = NULL;
 	exploitLoaded = false;
 	
-	pois0n_device = device;
+	pois0n_device = dev;
 	pois0n_build = build;
 
 	//Start real code
