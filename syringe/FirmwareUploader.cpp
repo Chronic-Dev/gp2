@@ -115,7 +115,7 @@ void FirmwareUploader::UploadImagePayload(char *type) {
 	if (!strcmp(type, "iBEC") || !strcmp(type, "iBoot"))
 		snprintf(path, 254, "payloads/cyanide/%s.armv7", "iBoot");
 	else
-		snprintf(path, 254, "payloads/cyanide/%s.armv7", "iBEC");
+		snprintf(path, 254, "payloads/cyanide/%s.armv7", "iBSS");
 
 	FILE *fp = fopen(path, "rb");
 	if (!fp)
@@ -127,6 +127,12 @@ void FirmwareUploader::UploadImagePayload(char *type) {
 	payload = (unsigned char *)malloc(size * sizeof(unsigned char *));
 	fread(payload, size, 1, fp);
 	fclose(fp);
+
+	//Reconnect to the device...
+	client = irecv_reconnect(client, 10);
+	if (client == NULL) {
+		throw SyringeBubble("Unable to reconnect");
+	}
 		
 	error = irecv_reset_counters(client);
 	if (error != IRECV_E_SUCCESS) {

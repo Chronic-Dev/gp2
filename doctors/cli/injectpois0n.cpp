@@ -87,7 +87,7 @@ int main(int argc, char **args) {
 			sleep(1);
 		}
 		cout << "Injecting..." << endl;
-		injector->inject(U_IBSS_ONLY);
+		injector->inject(U_IBOOT_PATCHED);
 		cout << "Done!" << endl;
 	} catch (SyringeBubble &bubble) {
 		cout << bubble.getError() << endl;
