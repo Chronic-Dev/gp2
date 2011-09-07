@@ -109,9 +109,28 @@ void FirmwareUploader::FetchImage(char *type, char *output) {
 
 void FirmwareUploader::UploadImagePayload(char *type) {
 	int size = 0;
+	char path[255];
 	unsigned char *payload = NULL;
 	irecv_error_t error = IRECV_E_SUCCESS;
 
+	memset(path, '\0', 255);
+
+	if (!strcmp(type, "iBEC") || !strcmp(type, "iBoot"))
+		snprintf(path, 254, "payloads/cyanide/%s.armv7", "iBoot");
+	else
+		snprintf(path, 254, "payloads/cyanide/%s.armv7", "iBEC");
+
+	FILE *fp = fopen(path, "rb");
+	if (!fp)
+		throw SyringeBubble("Unable to open payload");
+
+	fseek(fp, 0, SEEK_END);
+	size = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+	payload = (unsigned char *)malloc(size * sizeof(unsigned char *));
+	fread(payload, size, 1, fp);
+	fclose(fp);
+		
 	error = irecv_reset_counters(client);
 	if (error != IRECV_E_SUCCESS) {
 		throw SyringeBubble("Unable to upload payload");

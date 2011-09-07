@@ -30,7 +30,32 @@ Syringe::Syringe() {
 	system("TASKKILL /F /IM iTunes.exe > NUL");
 	system("TASKKILL /F /IM iTunesHelper.exe > NUL");
 #endif
+}
 
+Syringe::Syringe(iDeviceTarget device, char *build) {
+	//Null out variables
+	usableExploitCount = 0;
+	_isBuildSupported = NULL;
+	_getTargets = NULL;
+	_getExploitType = NULL;
+	_getExploitName = NULL;
+	_exploit = NULL;
+	exploitLoaded = false;
+	
+	pois0n_device = device;
+	pois0n_build = build;
+
+	//Start real code
+	irecv_init();
+	irecv_set_debug_level(SHOWDEBUGGING);
+	debug("Initializing libpois0n\n");
+#ifdef __APPLE__
+	system("killall -9 iTunesHelper 2>/dev/null");
+#endif
+#ifdef _WIN32
+	system("TASKKILL /F /IM iTunes.exe > NUL");
+	system("TASKKILL /F /IM iTunesHelper.exe > NUL");
+#endif
 }
 
 Syringe::~Syringe() {
