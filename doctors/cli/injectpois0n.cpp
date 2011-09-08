@@ -7,6 +7,8 @@ int main(int argc, char **args) {
 	int i = 0;
 	iDeviceTarget device;
 	char *build = NULL;
+	char *ipsw = NULL;
+	int useCustomDevice = 0;
 	try {
 		if (argc > 1) {
 			for (i = 1; i < argc; i++) {
@@ -48,18 +50,28 @@ int main(int argc, char **args) {
 						cout << "\tIPT4G   - iPod Touch (fourth gen)" << endl;
 						return 0;
 					}
+					useCustomDevice = 1;
 				} else if (!strcmp(args[i], "--build") || !strcmp(args[i], "-b")) {
 					i++;
 					build = args[i];
+				} else if (!strcmp(args[i], "--ipsw") || !strcmp(args[i], "-i")) {
+					i++;
+					ipsw = args[i];
 				}
 			}
 		}
 		Syringe *injector;
-		if (i > 0) {
-			i = 0;
-			injector = new Syringe(device, build);
+		if (useCustomDevice == 1) {
+			if (ipsw != NULL && useCustomDevice == 1) {
+				injector = new Syringe(ipsw, device, build);
+			} else {
+				injector = new Syringe(device, build);
+			}
 		} else {
-			injector = new Syringe();
+			if (ipsw != NULL)
+				injector = new Syringe(ipsw);
+			else
+				injector = new Syringe();
 			char *devinfo = injector->getConnectedDeviceInfo();
 			cout << "Found Device \"" << devinfo << "\" in Normal Mode" << endl;
 		}
