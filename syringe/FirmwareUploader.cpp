@@ -158,7 +158,7 @@ void FirmwareUploader::UploadRamdisk() {
 	size = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 	payload = (unsigned char *)malloc(size * sizeof(unsigned char *));
-	fread(payload, size, 1, fp);
+	fread(ramdisk, size, 1, fp);
 	fclose(fp);
 
 	error = irecv_send_buffer(client, (unsigned char *)ramdisk, size, 0);
