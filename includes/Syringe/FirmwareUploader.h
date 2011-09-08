@@ -21,7 +21,7 @@ class FirmwareUploader {
 		 * The FirmwareUploader Constructor
 		 * @throws SyringeBubble if device connection fails
 		 */
-		FirmwareUploader();
+		FirmwareUploader(char *ipsw = NULL);
 		/**
 		 * The FirmwareUploader Deconstructor
 		 */
@@ -64,5 +64,6 @@ class FirmwareUploader {
 		void UploadRamdiskFiles();
 		irecv_client_t client; /**< The irecovery client */
 		irecv_device_t device; /**< The irecovery device */
+		char *ipsw;
 };
 

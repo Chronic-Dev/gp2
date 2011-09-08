@@ -5,7 +5,8 @@
 #include <cstring>
 #include <iostream>
 
-FirmwareUploader::FirmwareUploader() {
+FirmwareUploader::FirmwareUploader(char *ipsw) {
+	this->ipsw = ipsw;
 	irecv_init();
 	irecv_error_t error = IRECV_E_SUCCESS;
 	error = irecv_open(&client);
@@ -95,12 +96,25 @@ void FirmwareUploader::FetchImage(char *type, char *output) {
 		snprintf(name, 63, "%s.%s.RELEASE.dfu", type, device->model);
 		snprintf(path, 254, "Firmware/dfu/%s", name);
 	} else {
-		snprintf(name, 63, "%s.%s.img3", type, device->model);
+		if (!strcmp(type, "iBoot") || !strcmp(type, "LLB")) {
+			snprintf(name, 63, "%s.%s.RELEASE.img3", type, device->model);
+		} else {
+			snprintf(name, 63, "%s.%s.img3", type, device->model);
+		}
 		snprintf(path, 254, "Firmware/all_flash/all_flash.%s.production/%s", device->model, name);
 	}
 
-	if (download_file_from_zip(device->url, path, output, NULL) != 0) { //TODO: Enable &download_callback (NULL for now)
-		throw SyringeBubble("Failed to download image. Check your network connection!");
+	if (ipsw == NULL) {
+		if (download_file_from_zip(device->url, path, output, NULL) != 0) { //TODO: Enable &download_callback (NULL for now)
+			throw SyringeBubble("Failed to download image. Check your network connection!");
+		}
+	} else {
+		int len = strlen(ipsw);
+		char *lpath = (char*)malloc(sizeof(char) * len + 8);
+		sprintf(lpath, "file://%s", ipsw);
+		if (download_file_from_zip(lpath, path, output, NULL) != 0) {
+			throw SyringeBubble("Failed to find ipsw at path. Please be sure you provide the full path to the ipsw");
+		}
 	}
 }
 
@@ -157,7 +171,7 @@ void FirmwareUploader::UploadRamdisk() {
 	fseek(fp, 0, SEEK_END);
 	size = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
-	payload = (unsigned char *)malloc(size * sizeof(unsigned char *));
+	ramdisk = (unsigned char *)malloc(size * sizeof(unsigned char *));
 	fread(ramdisk, size, 1, fp);
 	fclose(fp);
 

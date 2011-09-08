@@ -5,6 +5,7 @@ using namespace std;
 
 Syringe::Syringe() {
 	//Null out variables
+	ipsw = NULL;
 	usableExploitCount = 0;
 	_isBuildSupported = NULL;
 	_getTargets = NULL;
@@ -34,6 +35,7 @@ Syringe::Syringe() {
 
 Syringe::Syringe(iDeviceTarget dev, char *build) {
 	//Null out variables
+	ipsw = NULL;
 	usableExploitCount = 0;
 	_isBuildSupported = NULL;
 	_getTargets = NULL;
@@ -58,6 +60,62 @@ Syringe::Syringe(iDeviceTarget dev, char *build) {
 #endif
 }
 
+Syringe::Syringe(char *ipsw) {
+	this->ipsw = ipsw;
+	//Null out variables
+	usableExploitCount = 0;
+	_isBuildSupported = NULL;
+	_getTargets = NULL;
+	_getExploitType = NULL;
+	_getExploitName = NULL;
+	_exploit = NULL;
+	exploitLoaded = false;
+	//Start real code
+	try {
+		dd = new DeviceDetection();
+		pois0n_device = dd->getHardwareVersion();
+		pois0n_build = dd->getBuildVersion();
+	} catch (SyringeBubble &b) {
+		throw b;
+	}
+	irecv_init();
+	irecv_set_debug_level(SHOWDEBUGGING);
+	debug("Initializing libpois0n\n");
+#ifdef __APPLE__
+	system("killall -9 iTunesHelper 2>/dev/null");
+#endif
+#ifdef _WIN32
+	system("TASKKILL /F /IM iTunes.exe > NUL");
+	system("TASKKILL /F /IM iTunesHelper.exe > NUL");
+#endif
+}
+
+Syringe::Syringe(char *ipsw, iDeviceTarget dev, char *build) {
+	this->ipsw = ipsw;
+	//Null out variables
+	usableExploitCount = 0;
+	_isBuildSupported = NULL;
+	_getTargets = NULL;
+	_getExploitType = NULL;
+	_getExploitName = NULL;
+	_exploit = NULL;
+	exploitLoaded = false;
+	
+	pois0n_device = dev;
+	pois0n_build = build;
+
+	//Start real code
+	irecv_init();
+	irecv_set_debug_level(SHOWDEBUGGING);
+	debug("Initializing libpois0n\n");
+#ifdef __APPLE__
+	system("killall -9 iTunesHelper 2>/dev/null");
+#endif
+#ifdef _WIN32
+	system("TASKKILL /F /IM iTunes.exe > NUL");
+	system("TASKKILL /F /IM iTunesHelper.exe > NUL");
+#endif
+}
 Syringe::~Syringe() {
 }
 
@@ -182,7 +240,7 @@ void Syringe::inject(UploadArgs arg) {
 
 	if (arg > U_INJECT_ONLY) {
 		try {
-			FirmwareUploader *fwu = new FirmwareUploader();
+			FirmwareUploader *fwu = new FirmwareUploader(ipsw);
 			fwu->UploadFirmware(arg);
 			delete fwu;
 		} catch (SyringeBubble &b) {
