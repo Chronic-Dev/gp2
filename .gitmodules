@@ -22,3 +22,6 @@
 [submodule "libs/libusb"]
 	path = libs/libusb
 	url = git@github.com:Chronic-Dev/libusb.git
+[submodule "libs/gnutls"]
+	path = libs/gnutls
+	url = git@github.com:Chronic-Dev/gnutls.git
