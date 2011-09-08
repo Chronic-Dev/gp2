@@ -10,9 +10,6 @@
 [submodule "libs/libxml2"]
 	path = libs/libxml2
 	url = git@github.com:Chronic-Dev/libxml2.git
-[submodule "libs/gnutls"]
-	path = libs/gnutls
-	url = git@github.com:Chronic-Dev/gnutls.git
 [submodule "libs/libtasn1"]
 	path = libs/libtasn1
 	url = git@github.com:Chronic-Dev/libtasn1.git
