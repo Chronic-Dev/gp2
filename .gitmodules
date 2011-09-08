@@ -25,3 +25,6 @@
 [submodule "libs/gnutls"]
 	path = libs/gnutls
 	url = git@github.com:Chronic-Dev/gnutls.git
+[submodule "libs/curl"]
+	path = libs/curl
+	url = git@github.com:Chronic-Dev/curl.git

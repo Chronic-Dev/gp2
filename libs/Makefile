@@ -27,6 +27,8 @@ all:
 	@cp gnutls/libgnutlsxx.a $(LIBSDIR)/
 	@make -C libimobiledevice -f Makefile.static
 	@cp libimobiledevice/libimobiledevice.a $(LIBSDIR)/
+	@make -C curl -f Makefile.static
+	@cp curl/libcurl.a $(LIBSDIR)/
 	@gcc -c -fPIC -I../includes -DCURL_STATICLIB=1 -mmacosx-version-min=10.5 -m32 -isysroot /Developer/SDKs/MacOSX10.6.sdk *.c
 
 clean:
@@ -41,4 +43,5 @@ clean:
 	@make -C libgcrypt -f Makefile.static clean
 	@make -C gnutls -f Makefile.static clean
 	@make -C libimobiledevice -f Makefile.static clean
+	@make -C curl -f Makefile.static clean
 
