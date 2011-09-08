@@ -18,8 +18,6 @@
   * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include "offsets.h"
-
 .arm
 .ltorg
 .code 32
@@ -140,7 +138,7 @@ patch:
 
 patch1:
 	ldr	r0, =FP_CMD_1
-	ldr	r1, =TARGET_BASEADDR
+	mov	r1, #0x0
 	mov	r2, #0x2c000		@ search area
 	ldr	r3, =FP_CMD_2
 	blx	find_64
@@ -154,7 +152,7 @@ patch1:
 
 patch2:
 	ldr	r0, =FP_CMD2_1
-	ldr	r1, =TARGET_BASEADDR
+	mov	r1, #0x0
 	mov	r2, #0x24000		@ search area
 	ldr	r3, =FP_CMD2_2
 	blx	find_64

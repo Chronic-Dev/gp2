@@ -27,7 +27,7 @@
 LinkedList* gNvramList = NULL;
 
 void* find_nvram_list() {
-	unsigned int ref1 = find_string(TARGET_BASEADDR, TARGET_BASEADDR, 0x40000, "build-style");
+	unsigned int ref1 = find_string(gBaseaddr, gBaseaddr, 0x40000, "build-style");
 	unsigned int* ref2 = find_string(ref1+4, ref1+4, 0x40000, "build-style");
 	ref2 -= 5;
 	return *ref2;

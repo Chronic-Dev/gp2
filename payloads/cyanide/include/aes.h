@@ -9,7 +9,6 @@
 #define AES_H
 
 #include "device.h"
-#include "offsets.h"
 #include "common.h"
 #include "commands.h"
 

@@ -30,7 +30,7 @@ int(*aes_crypto_cmd)(AesOption option, void* input, void* output, unsigned int s
 
 int aes_init() {
 	//printf("Initializing aes\n");
-	aes_crypto_cmd = find_function("aes_crypto_cmd", TARGET_BASEADDR, TARGET_BASEADDR);
+	aes_crypto_cmd = find_function("aes_crypto_cmd", gBaseaddr, gBaseaddr);
 	if(aes_crypto_cmd == NULL) {
 		puts("Unable to find aes_crypto_cmd\n");
 	} else {

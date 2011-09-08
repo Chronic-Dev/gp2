@@ -30,7 +30,7 @@
 LinkedList* gImageList = NULL;
 
 void* find_image_list() {
-	unsigned int ref = find_string(TARGET_BASEADDR, TARGET_BASEADDR, 0x50000, "tobi");
+	unsigned int ref = find_string(gBaseaddr, gBaseaddr, 0x50000, "tobi");
 	ImageDescriptor* image = ref-0x1C;
 	return image->list.prev;
 }

@@ -30,11 +30,11 @@ void(*uart_write)(int bus, char* buffer, int size) = NULL;
 void(*uart_read)(int bus, char* buffer, int size1, int size2) = NULL;
 
 void* find_uart_read() {
-	return find_function("uart_read", TARGET_BASEADDR, TARGET_BASEADDR);
+	return find_function("uart_read", gBaseaddr, gBaseaddr);
 }
 
 void* find_uart_write() {
-	return find_function("uart_write", TARGET_BASEADDR, TARGET_BASEADDR);
+	return find_function("uart_write", gBaseaddr, gBaseaddr);
 }
 
 int uart_init() {
@@ -87,6 +87,7 @@ int uart_cmd(int argc, CmdArg* argv) {
 			}
 			strncat(data, argv[i].string, 0x100);
 		}
+		printf("uart sending: %s\n", data);
 		strncat(data, "\r\n", 0x100);
 		uart_write(bus, data, strlen(data));
 	}

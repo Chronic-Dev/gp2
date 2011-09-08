@@ -1,12 +1,11 @@
 CROSS ?= arm-elf-
 CC = $(CROSS)gcc
 LD = $(CROSS)ld
-SRC = ../../../..
+SRC = ../../
 #BIN2C = $(SRC)/tools/bin2c
-LOADADDR = 0x42000000
-TYPE = iBoot
-MODEL = n18ap
-FIRMWARE = 8B117
+LOADADDR = 0x42000000 
+TYPE = iBSS
+ARCH = armv7
 OBJCOPY = $(CROSS)objcopy
 OBJECTS = entry.o main.o common.o commands.o task.o lock.o aes.o bdev.o image.o nvram.o filesystem.o kernel.o memory.o patch.o functions.o framebuffer.o breakpoint.o uart.o radio.o
 CFLAGS = -I. -I./.. -I./../.. -I./$(SRC)/include -nostdlib -mlittle-endian -w
@@ -21,7 +20,7 @@ LDFLAGS = -Ttext=$(LOADADDR) -nostdlib -lc -lm -lgcc
 all: payload
 
 payload: payload.elf
-	@cp payload $(SRC)/payloads/$(TYPE).$(MODEL).$(FIRMWARE)
+	@cp payload $(SRC)/payloads/$(TYPE).$(ARCH)
 	
 payload.elf: $(OBJECTS)
 	@$(CC) -o $(@) $(OBJECTS) $(LDFLAGS)

@@ -30,7 +30,7 @@ BdevDescriptor** gBdevList = NULL;
 
 void* find_bdev_list() {
 	BdevDescriptor* bdev = NULL;
-	unsigned int ref = find_string(TARGET_BASEADDR, TARGET_BASEADDR, 0xA0000, "nand0a");
+	unsigned int ref = find_string(gBaseaddr, gBaseaddr, 0xA0000, "nand0a");
 	if(ref != 0) {
 		bdev = ((void*) ref) - 0x30;
 		// Find nand0a structure xref now...

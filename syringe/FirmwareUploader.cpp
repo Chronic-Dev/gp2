@@ -5,10 +5,8 @@
 #include <cstring>
 #include <iostream>
 
-FirmwareUploader::FirmwareUploader() {
-	irecv_client_t client = NULL;
-	irecv_device_t device = NULL;
-
+FirmwareUploader::FirmwareUploader(char *ipsw) {
+	this->ipsw = ipsw;
 	irecv_init();
 	irecv_error_t error = IRECV_E_SUCCESS;
 	error = irecv_open(&client);
@@ -18,7 +16,7 @@ FirmwareUploader::FirmwareUploader() {
 	}
 
 	error = irecv_get_device(client, &device);
-	if (device == NULL) {
+	if (error != IRECV_E_SUCCESS) {
 		irecv_close(client);
 		irecv_exit();
 		throw SyringeBubble("Failed to get device");
@@ -98,20 +96,58 @@ void FirmwareUploader::FetchImage(char *type, char *output) {
 		snprintf(name, 63, "%s.%s.RELEASE.dfu", type, device->model);
 		snprintf(path, 254, "Firmware/dfu/%s", name);
 	} else {
-		snprintf(name, 63, "%s.%s.img3", type, device->model);
+		if (!strcmp(type, "iBoot") || !strcmp(type, "LLB")) {
+			snprintf(name, 63, "%s.%s.RELEASE.img3", type, device->model);
+		} else {
+			snprintf(name, 63, "%s.%s.img3", type, device->model);
+		}
 		snprintf(path, 254, "Firmware/all_flash/all_flash.%s.production/%s", device->model, name);
 	}
 
-	if (download_file_from_zip(device->url, path, output, NULL) != 0) { //TODO: Enable &download_callback (NULL for now)
-		throw SyringeBubble("Failed to download image. Check your network connection!");
+	if (ipsw == NULL) {
+		if (download_file_from_zip(device->url, path, output, NULL) != 0) { //TODO: Enable &download_callback (NULL for now)
+			throw SyringeBubble("Failed to download image. Check your network connection!");
+		}
+	} else {
+		int len = strlen(ipsw);
+		char *lpath = (char*)malloc(sizeof(char) * len + 8);
+		sprintf(lpath, "file://%s", ipsw);
+		if (download_file_from_zip(lpath, path, output, NULL) != 0) {
+			throw SyringeBubble("Failed to find ipsw at path. Please be sure you provide the full path to the ipsw");
+		}
 	}
 }
 
 void FirmwareUploader::UploadImagePayload(char *type) {
 	int size = 0;
+	char path[255];
 	unsigned char *payload = NULL;
 	irecv_error_t error = IRECV_E_SUCCESS;
 
+	memset(path, '\0', 255);
+
+	if (!strcmp(type, "iBEC") || !strcmp(type, "iBoot"))
+		snprintf(path, 254, "payloads/cyanide/%s.armv7", "iBoot");
+	else
+		snprintf(path, 254, "payloads/cyanide/%s.armv7", "iBSS");
+
+	FILE *fp = fopen(path, "rb");
+	if (!fp)
+		throw SyringeBubble("Unable to open payload");
+
+	fseek(fp, 0, SEEK_END);
+	size = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+	payload = (unsigned char *)malloc(size * sizeof(unsigned char *));
+	fread(payload, size, 1, fp);
+	fclose(fp);
+
+	//Reconnect to the device...
+	client = irecv_reconnect(client, 10);
+	if (client == NULL) {
+		throw SyringeBubble("Unable to reconnect");
+	}
+		
 	error = irecv_reset_counters(client);
 	if (error != IRECV_E_SUCCESS) {
 		throw SyringeBubble("Unable to upload payload");
@@ -127,6 +163,17 @@ void FirmwareUploader::UploadRamdisk() {
 	int size = 0;
 	unsigned char *ramdisk = NULL;
 	irecv_error_t error = IRECV_E_SUCCESS;
+
+	FILE *fp = fopen("anthrax.dmg", "rb");
+	if (!fp)
+		throw SyringeBubble("Unable to open payload");
+
+	fseek(fp, 0, SEEK_END);
+	size = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+	ramdisk = (unsigned char *)malloc(size * sizeof(unsigned char *));
+	fread(ramdisk, size, 1, fp);
+	fclose(fp);
 
 	error = irecv_send_buffer(client, (unsigned char *)ramdisk, size, 0);
 	if (error != IRECV_E_SUCCESS) {

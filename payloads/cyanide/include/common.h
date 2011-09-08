@@ -21,7 +21,6 @@
 #define COMMON_H
 
 #include "device.h"
-#include "offsets.h"
 
 #ifndef NULL
 #define NULL 0

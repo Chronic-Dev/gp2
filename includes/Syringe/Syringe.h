@@ -35,6 +35,27 @@ class Syringe {
 		 */
 		Syringe();
 		/**
+		 * An Alternate Syringe Constructor that manually uses a defined ipsw
+		 * @param ipsw The full path to the ipsw
+		 * @return A Syringe!!
+		 */
+		Syringe(char *ipsw);
+		/**
+		 * The Alternate Syringe Constructor without device detection. Useful for debugging
+		 * @param dev an iDeviceTarget for the target device
+		 * @param build char * Build Version for the firmware on the device
+		 * @return A Syringe!!
+		 */
+		Syringe(iDeviceTarget dev, char *build);
+		/**
+		 * The Alternate Syringe Constructor without device detection and manually defined ipsw. Useful for debugging
+		 * @param ipsw The full path to the ipsw
+		 * @param dev an iDeviceTarget for the target device
+		 * @param build char * Build Version for the firmware on the device
+		 * @return A Syringe!!
+		 */
+		Syringe(char *ipsw, iDeviceTarget dev, char *build);
+		/**
 		 * The Syringe Deconstructor.
 		 */
 		~Syringe();
@@ -106,6 +127,7 @@ class Syringe {
 		getExploitName_t _getExploitName; /**< The getExploitName function of the loaded exploit */
 		exploit_t _exploit; /**< The exploit function of the loaded exploit */
 		DeviceDetection *dd; /**< The device detection class pointer */
+		char *ipsw;
 		//Status variables
 		bool exploitLoaded; /**< bool indicating if the user has selected an exploit for use */
 };
