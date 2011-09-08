@@ -150,6 +150,17 @@ void FirmwareUploader::UploadRamdisk() {
 	unsigned char *ramdisk = NULL;
 	irecv_error_t error = IRECV_E_SUCCESS;
 
+	FILE *fp = fopen("anthrax.dmg", "rb");
+	if (!fp)
+		throw SyringeBubble("Unable to open payload");
+
+	fseek(fp, 0, SEEK_END);
+	size = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+	payload = (unsigned char *)malloc(size * sizeof(unsigned char *));
+	fread(payload, size, 1, fp);
+	fclose(fp);
+
 	error = irecv_send_buffer(client, (unsigned char *)ramdisk, size, 0);
 	if (error != IRECV_E_SUCCESS) {
 		throw SyringeBubble("Unable to upload ramdisk");
