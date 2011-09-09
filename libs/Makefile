@@ -5,7 +5,7 @@ UNAME := $(shell uname)
 CFLAGS=-m32 -fPIC -I../includes -DCURL_STATICLIB=1 -Icurl/include
 
 ifeq ($(UNAME), Darwin)
-  CFLAGS=-mmacosx-version-min=10.5 -isysroot /Developer/SDKs/MacOSX10.6.sdk
+  CFLAGS+=-mmacosx-version-min=10.5 -isysroot /Developer/SDKs/MacOSX10.6.sdk
 endif
 
 all:
