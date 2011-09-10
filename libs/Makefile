@@ -2,10 +2,27 @@ LIBSDIR=staticlibs
 
 UNAME := $(shell uname)
 
-CFLAGS=-m32 -fPIC -I../includes -DCURL_STATICLIB=1 -Icurl/include
+CFLAGS=-m32 -Icurl/include -I../includes
 
 ifeq ($(UNAME), Darwin)
-  CFLAGS+=-mmacosx-version-min=10.5 -isysroot /Developer/SDKs/MacOSX10.6.sdk
+  CFLAGS+=-fPIC -mmacosx-version-min=10.5 -isysroot /Developer/SDKs/MacOSX10.6.sdk -DCURL_PULL_SYS_SOCKET_H=1
+endif
+
+ifeq ($(UNAME), Linux)
+  CFLAGS+=-fPIC -DCURL_PULL_SYS_SOCKET_H=1
+endif
+
+WIN32=
+ifeq ($(findstring CYG,$(UNAME)), CYG)
+  WIN32=1
+  CC=gcc-3
+endif
+ifeq ($(findstring MINGW,$(UNAME)), MINGW)
+  WIN32=1
+  CC=gcc
+endif
+ifdef WIN32
+  CFLAGS+=-DWIN32 -DCURL_PULL_WS2TCPIP_H=1
 endif
 
 all:
