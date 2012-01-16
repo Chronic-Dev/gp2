@@ -7,3 +7,5 @@ limera1n.h
 *.dSYM
 *.dylib
 payloads/cyanide/payloads/
+.DS_Store
+libs/staticlibs/
