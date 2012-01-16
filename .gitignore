@@ -9,3 +9,4 @@ limera1n.h
 payloads/cyanide/payloads/
 .DS_Store
 libs/staticlibs/
+*.pro.user
