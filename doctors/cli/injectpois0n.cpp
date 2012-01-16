@@ -11,6 +11,10 @@ int main(int argc, char **args) {
 	int useCustomDevice = 0;
 	try {
 		if (argc > 1) {
+			if (!strcmp(args[1], "--help") || !strcmp(args[1], "-h")) {
+				cout << args[0] << " [--device DEVICE --build FIRMWARE_BUILD] [--ipsw /path/to/ipsw]" << endl;
+				return 0;
+			}
 			for (i = 1; i < argc; i++) {
 				if (!strcmp(args[i], "--device") || !strcmp(args[i], "-d")) {
 					i++;

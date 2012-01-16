@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-c -I../includes/ -I/usr/local/include/ -Iinclude/ -I/opt/local/include/ -m32 -w -ggdb
+CFLAGS=-c -I../libs/libplist/include/ -I../libs/libimobiledevice/include/ -I../includes/ -I/usr/local/include/ -Iinclude/ -I/opt/local/include/ -m32 -w -ggdb
 
 all:
 	@$(CC) $(CFLAGS) *.cpp

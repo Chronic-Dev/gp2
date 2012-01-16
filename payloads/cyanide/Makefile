@@ -1,4 +1,5 @@
 all:
+	@mkdir -p payloads/
 	@make -C bundles/
 
 clean:
