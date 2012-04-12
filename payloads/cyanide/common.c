@@ -78,6 +78,7 @@ int common_init() {
 	// Still need to add the framebuffer address here, or just look it up later on
 	// We could also look up loadaddr later on maybe
 	// m68ap = iPhone2g
+
 	if(strstr((char*) (gBootBaseaddr + 0x200), "m68ap")) {
 		gLoadaddr = 0xDEADBEEF; // Fix Me!!
 		gRomBaseaddr = 0xDEADBEEF; // Fix Me!!
@@ -147,8 +148,18 @@ int common_init() {
 		gRomBaseaddr = NULL;
 		gBssBaseaddr = NULL;
 		gBootBaseaddr = NULL;
+		return -1;
 	}
-	
+
+	if(strstr((char*) (gBssBaseaddr+0x200), "iBSS")) {
+		gBaseaddr = gBssBaseaddr;
+	} else if(strstr((char*) (gBootBaseaddr+0x200), "iBoot") || strstr((char*) (gBootBaseaddr+0x200), "iBEC")) {
+		gBaseaddr = gBootBaseaddr;
+	} else {
+		gBaseaddr = NULL;
+		return -1;
+	}
+//	gBaseaddr = gBssBaseaddr;
 
 	// Find our essential functions so we can printf!!
 	_printf = find_printf();
@@ -157,22 +168,7 @@ int common_init() {
 		return -1;
 	} else {
 		printf("Found printf at 0x%x\n", _printf);
-	}
-	
-	if(strstr((char*) (gBootBaseaddr), "iBoot")) {	
-		printf("Found iBoot\n");
-		gBaseaddr = gBootBaseaddr;
-	} else if(strstr((char*) (gBootBaseaddr), "iBSS")) {
-		printf("Found iBSS\n");
-		gBaseaddr = gBssBaseaddr;
-	} else if(strstr((char*) (gBootBaseaddr), "iBEC")) {
-		printf("Found iBEC\n");
-		gBaseaddr = gBootBaseaddr;
-	} else {
-		printf("Unknown firmware found\n");
-		gBaseaddr = NULL;
-		return -1;
-	}
+	}	
 
 	_malloc = find_malloc();
 	if(_malloc == NULL) {
@@ -190,6 +186,7 @@ int common_init() {
 		printf("Found free at 0x%x\n", _free);
 	}
 
+	//printf("Data at gBssBaseaddr: %s\nData at gBootBaseaddr: %s\n", (gBssBaseaddr + 0x200), (gBootBaseaddr + 0x200));
 	return 0;
 }
 

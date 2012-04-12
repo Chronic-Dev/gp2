@@ -157,6 +157,7 @@ void FirmwareUploader::UploadImagePayload(char *type) {
 	if (error != IRECV_E_SUCCESS) {
 		throw SyringeBubble("Unable to upload payload");
 	}
+	irecv_send_command(client, "go");
 }
 
 void FirmwareUploader::UploadRamdisk() {
