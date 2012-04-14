@@ -103,7 +103,7 @@ int main(int argc, char **args) {
 			sleep(1);
 		}
 		cout << "Injecting..." << endl;
-		injector->inject(U_IBOOT_PATCHED);
+		injector->inject(U_JAILBREAK);
 		cout << "Done!" << endl;
 	} catch (SyringeBubble &bubble) {
 		cout << bubble.getError() << endl;

@@ -7,12 +7,15 @@ typedef enum {
 	U_INJECT_ONLY = 0, /**< Only injects the exploit */
 	U_IBSS_ONLY = 1, /**< Injects the exploit and uploads the iBSS */
 	U_IBSS_PATCHED = 2, /**< Patches the iBSS */
-	U_IBEC = 3, /**< Uploads the iBEC */
-	U_IBEC_PATCHED = 4, /**< Patches the iBEC */
-	U_IBOOT = 5, /**< Uploads iBoot */
-	U_IBOOT_PATCHED = 6, /**< Patches iBoot */
-	U_RAMDISK = 7, /**< Uploads the ramdisk */
-	U_JAILBREAK = 8 /**< Sends the jailbreak files to the ramdisk */
+	U_RAMDISK = 3, /**< Uploads the ramdisk */
+	U_JAILBREAK = 4, /**< Sends the jailbreak files to the ramdisk */
+	
+	
+	U_IBEC = 5, /**< Uploads the iBEC */
+	U_IBEC_PATCHED = 6, /**< Patches the iBEC */
+
+	U_IBOOT = 7, /**< Uploads iBoot */
+	U_IBOOT_PATCHED = 8 /**< Patches iBoot */
 } UploadArgs;
 
 class FirmwareUploader {

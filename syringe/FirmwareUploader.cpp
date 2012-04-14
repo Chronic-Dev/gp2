@@ -1,5 +1,6 @@
 #include <Syringe/FirmwareUploader.h>
 #include <cstdlib>
+#include <stdio.h>
 #include <libpartial.h>
 #include <Syringe/SyringeBubble.h>
 #include <cstring>
@@ -31,27 +32,37 @@ FirmwareUploader::~FirmwareUploader() {
 void FirmwareUploader::UploadFirmware(UploadArgs args) {
 	try {
 		if (client->mode == kDfuMode) { //We start with the iBSS
-			UploadImage("iBSS");
-			if (args > U_IBSS_ONLY) {
-				UploadImagePayload("iBSS");
-				if (args > U_IBSS_PATCHED) {
-					UploadImage("iBEC");
-					if (args > U_IBEC) {
-						UploadImagePayload("iBEC");
-						if (args > U_IBEC_PATCHED) {
-							UploadImage("iBoot");
+			if (args < U_IBEC) {
+				UploadImage("iBSS");
+				if (args > U_IBSS_ONLY) {
+					UploadImagePayload("iBSS");
+					if (args > U_IBSS_PATCHED) {
+						UploadRamdisk();
+						if (args > U_RAMDISK) {
+							UploadRamdiskFiles();
+						}
+					}
+				}
+			} else if (args > U_JAILBREAK) {
+				UploadImage("iBEC");
+				if (args > U_IBEC) {
+					UploadImagePayload("iBEC");
+					if (args > U_IBEC_PATCHED) {
+						UploadImage("iBoot");
+						if (args > U_IBOOT) {
+							UploadImagePayload("iBoot");
 						}
 					}
 				}
 			}
-		}
-
-		if (args > U_IBOOT) {
-			UploadImagePayload("iBoot");
-			if (args > U_IBOOT_PATCHED) {
-				UploadRamdisk();
-				if (args > U_RAMDISK) {
-					UploadRamdiskFiles();
+		} else /*TODO: Make sure we're in recovery mode */ {
+			if (args > U_IBOOT) {
+				UploadImagePayload("iBoot");
+				if (args > U_IBOOT_PATCHED) {
+					UploadRamdisk();
+					if (args > U_RAMDISK) {
+						UploadRamdiskFiles();
+					}
 				}
 			}
 		}
@@ -70,7 +81,11 @@ void FirmwareUploader::UploadImage(char *type) {
 	else
 		snprintf(image, 254, "kernelcache.release.%c%c%c", device->model[0], device->model[1], device->model[2]);
 
-	FetchImage(type, image);
+	FILE *fp = fopen(image, "rb");
+	if (fp == NULL)
+		FetchImage(type, image);
+	else
+		fclose(fp);
 
 	if (client->mode != kDfuMode) {
 		error = irecv_reset_counters(client);
@@ -167,7 +182,7 @@ void FirmwareUploader::UploadRamdisk() {
 
 	FILE *fp = fopen("anthrax.dmg", "rb");
 	if (!fp)
-		throw SyringeBubble("Unable to open payload");
+		throw SyringeBubble("Unable to open ramdisk");
 
 	fseek(fp, 0, SEEK_END);
 	size = ftell(fp);
