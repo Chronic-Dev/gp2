@@ -32,29 +32,30 @@ FirmwareUploader::~FirmwareUploader() {
 void FirmwareUploader::UploadFirmware(UploadArgs args) {
 	try {
 		if (client->mode == kDfuMode) { //We start with the iBSS
-			if (args < U_IBEC) {
-				UploadImage("iBSS");
-				if (args > U_IBSS_ONLY) {
-					UploadImagePayload("iBSS");
-					if (args > U_IBSS_PATCHED) {
+			UploadImage("iBSS");
+			if (args > U_IBSS_ONLY) {
+				UploadImagePayload("iBSS");
+				if (args == U_RAMDISK || args == U_JAILBREAK) {
 						UploadRamdisk();
-						if (args > U_RAMDISK) {
+						if (args == U_JAILBREAK) {
 							UploadRamdiskFiles();
 						}
 					}
+				} else if (args == U_IBEC || args == U_IBEC_PATCHED) {
+					//TODO
+					//UploadImage("iBEC");
+					//if (args == U_IBEC_PATCHED) {
+					//	UploadImagePayload("iBEC");
+					//}
+					throw SyringeBubble("Not yet implemented");
+				} else if (args == U_IBOOT || args == U_IBOOT_PATCHED) {
+					//UploadImage("iBoot");
+					//if (args == U_IBOOT_PATCHED) {
+					//	UploadImagePayload("iBoot");
+					//}
+					LoadiBoot();
+					UploadImagePayload("iBoot");
 				}
-			} else if (args > U_JAILBREAK) {
-				UploadImage("iBEC");
-				if (args > U_IBEC) {
-					UploadImagePayload("iBEC");
-					if (args > U_IBEC_PATCHED) {
-						UploadImage("iBoot");
-						if (args > U_IBOOT) {
-							UploadImagePayload("iBoot");
-						}
-					}
-				}
-			}
 		} else /*TODO: Make sure we're in recovery mode */ {
 			if (args > U_IBOOT) {
 				UploadImagePayload("iBoot");
@@ -69,6 +70,53 @@ void FirmwareUploader::UploadFirmware(UploadArgs args) {
 	} catch (SyringeBubble &b) {
 		throw b;
 	}
+}
+
+void FirmwareUploader::LoadiBoot() {
+	irecv_error_t error = IRECV_E_SUCCESS;
+	if (device->chip_id == 8720) {
+		error = irecv_send_command(client, "go image load 0x69626F74 0x9000000");
+	} else {
+		error = irecv_send_command(client, "go image load 0x69626F74 0x4100000");
+	}
+	if (error != IRECV_E_SUCCESS) {
+		throw SyringeBubble("Failed to load iBoot into memory");
+	}
+
+	if (device->chip_id == 8720) {
+		error = irecv_send_command(client, "go memory move 0x90000040 0x90000000 0x48000");
+	} else {
+		error = irecv_send_command(client, "go memory move 0x41000040 0x41000000 0x48000");
+	}
+	if (error != IRECV_E_SUCCESS) {
+		throw SyringeBubble("Failed to relocate iBoot");
+	}
+					
+	if (device->chip_id == 8720) {
+		error = irecv_send_command(client, "go patch 0x90000000 0x48000");
+	} else {	
+		error = irecv_send_command(client, "go patch 0x41000000 0x48000");
+	}
+	if (error != IRECV_E_SUCCESS) {
+		throw SyringeBubble("Failed to patch iBoot");
+	}
+					
+	if (device->chip_id == 8720) {
+		error = irecv_send_command(client, "go jump 0x90000000");
+	} else {
+		error = irecv_send_command(client, "go jump 0x41000000");
+	}
+	if (error != IRECV_E_SUCCESS) {
+		throw SyringeBubble("Failed to jump to iBoot");
+	}
+					
+	client = irecv_reconnect(client, 10);
+	if (client == NULL) {
+		throw SyringeBubble("Failed to reconnect to the device");
+	}
+
+	irecv_setenv(client, "auto-boot", "true");
+	irecv_saveenv(client);
 }
 
 void FirmwareUploader::UploadImage(char *type) {
@@ -196,34 +244,24 @@ void FirmwareUploader::UploadRamdisk() {
 		throw SyringeBubble("Unable to upload ramdisk");
 	}
 
-	error = irecv_send_command(client, "setenv filesize 0x1000000");
-	if (error != IRECV_E_SUCCESS) {
-		throw SyringeBubble("Unable to execute ramdisk");
-	}
-
 	error = irecv_send_command(client, "ramdisk");
 	if (error != IRECV_E_SUCCESS) {
 		throw SyringeBubble("Unable to execute ramdisk");
 	}
 
-	error = irecv_send_command(client, "go kernel bootargs rd=md0 -v amfi_allow_any_signature=1");
+	error = irecv_send_command(client, "go kernel bootargs rd=md0 -v"); // amfi_allow_any_signature=1");
 	if (error != IRECV_E_SUCCESS) {
 		throw SyringeBubble("Unable to set kernel bootargs");
 	}
-
+/*
 	UploadImage("DeviceTree");
 
 	error = irecv_send_command(client, "go devicetree");
 	if (error != IRECV_E_SUCCESS) {
 		throw SyringeBubble("Unable to load device tree");
 	}
-
+*/
 	UploadImage("kernelcache");
-
-	error = irecv_send_command(client, "go memory copy 0x41000000 0x44800000 0x1000000");
-	if (error != IRECV_E_SUCCESS) {
-		throw SyringeBubble("Unable to append kernelcache");
-	}
 
 	error = irecv_send_command(client, "go rdboot");
 	if (error != IRECV_E_SUCCESS) {

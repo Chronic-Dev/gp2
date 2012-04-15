@@ -8,6 +8,7 @@ int main(int argc, char **args) {
 	iDeviceTarget device;
 	char *build = NULL;
 	char *ipsw = NULL;
+	UploadArgs opts = U_JAILBREAK;
 	int useCustomDevice = 0;
 	try {
 		if (argc > 1) {
@@ -61,6 +62,31 @@ int main(int argc, char **args) {
 				} else if (!strcmp(args[i], "--ipsw") || !strcmp(args[i], "-i")) {
 					i++;
 					ipsw = args[i];
+				} else if (!strcmp(args[i], "--opts") || !strcmp(args[i], "-o")) {
+					i++;
+					if (!strcmp(args[i], "jailbreak")) {
+						opts = U_JAILBREAK;
+					} else if (!strcmp(args[i], "ramdisk")) {
+						opts = U_RAMDISK;
+					} else if (!strcmp(args[i], "iboot")) {
+						opts = U_IBOOT_PATCHED;
+					} else if (!strcmp(args[i], "ibss")) {
+						opts = U_IBSS_PATCHED;
+					} else if (!strcmp(args[i], "ibss_only")) {
+						opts = U_IBSS_ONLY;
+					} else if (!strcmp(args[i], "inject")) {
+						opts = U_INJECT_ONLY;
+					} else {
+						i--;
+						cout << "Invalid option for " << args[i] << endl;
+						cout << "Valid options are:" << endl;
+						cout << "\tinject    - Only injects the exploit" << endl;
+						cout << "\tibss_only - Injects the exploit and loads the iBSS without cyanide" << endl;
+						cout << "\tibss      - Loads cyanide in the iBSS" << endl;
+						cout << "\tiboot     - Loads cyanide in iBoot" << endl;
+						cout << "\tramdisk   - Loads a custom ramdisk" << endl;
+						cout << "\tjailbreak - Jailbreaks or tether boots the device" << endl;
+					}
 				}
 			}
 		}
@@ -103,7 +129,7 @@ int main(int argc, char **args) {
 			sleep(1);
 		}
 		cout << "Injecting..." << endl;
-		injector->inject(U_JAILBREAK);
+		injector->inject(opts);
 		cout << "Done!" << endl;
 	} catch (SyringeBubble &bubble) {
 		cout << bubble.getError() << endl;

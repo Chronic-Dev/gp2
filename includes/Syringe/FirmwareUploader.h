@@ -9,13 +9,12 @@ typedef enum {
 	U_IBSS_PATCHED = 2, /**< Patches the iBSS */
 	U_RAMDISK = 3, /**< Uploads the ramdisk */
 	U_JAILBREAK = 4, /**< Sends the jailbreak files to the ramdisk */
-	
-	
+		
 	U_IBEC = 5, /**< Uploads the iBEC */
 	U_IBEC_PATCHED = 6, /**< Patches the iBEC */
 
 	U_IBOOT = 7, /**< Uploads iBoot */
-	U_IBOOT_PATCHED = 8 /**< Patches iBoot */
+	U_IBOOT_PATCHED = 8, /**< Patches iBoot */
 } UploadArgs;
 
 class FirmwareUploader {
@@ -36,6 +35,11 @@ class FirmwareUploader {
 		 */
 		void UploadFirmware(UploadArgs args);
 	private:
+		/**
+		 * Loads iBoot from iBSS's memory
+		 * @throws SyringeBubble if load fails
+		 */
+		void LoadiBoot();
 		/**
 		 * Fetches the requested image and caches it
 		 * @param type The type of image to upload (iBSS, iBoot, kernelcache, etc)
