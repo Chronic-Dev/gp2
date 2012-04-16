@@ -28,3 +28,6 @@
 [submodule "libs/curl"]
 	path = libs/curl
 	url = git@github.com:Chronic-Dev/curl.git
+[submodule "libs/openssl"]
+	path = libs/openssl
+	url = git@github.com:Chronic-Dev/openssl.git

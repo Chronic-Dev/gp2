@@ -41,15 +41,9 @@ all:
 	@cp libplist/libplist++.a $(LIBSDIR)/
 	@make -C usbmuxd -f Makefile.static
 	@cp usbmuxd/libusbmuxd.a $(LIBSDIR)/
-	@make -C libtasn1 -f Makefile.static
-	@cp libtasn1/libtasn1.a $(LIBSDIR)/
-	@make -C libgpg-error -f Makefile.static
-	@cp libgpg-error/libgpg-error.a $(LIBSDIR)/
-	@make -C libgcrypt -f Makefile.static
-	@cp libgcrypt/libgcrypt.a $(LIBSDIR)/
-	@make -C gnutls -f Makefile.static
-	@cp gnutls/libgnutls.a $(LIBSDIR)/
-	@cp gnutls/libgnutlsxx.a $(LIBSDIR)/
+	@make -C openssl -f Makefile.static
+	@cp openssl/libcrypto.a $(LIBSDIR)/
+	@cp openssl/libssl.a $(LIBSDIR)/
 	@make -C libimobiledevice -f Makefile.static
 	@cp libimobiledevice/libimobiledevice.a $(LIBSDIR)/
 	@make -C curl -f Makefile.static
@@ -63,10 +57,7 @@ clean:
 	@make -C libxml2 -f Makefile.static clean
 	@make -C libplist -f Makefile.static clean
 	@make -C usbmuxd -f Makefile.static clean
-	@make -C libtasn1 -f Makefile.static clean
-	@make -C libgpg-error -f Makefile.static clean
-	@make -C libgcrypt -f Makefile.static clean
-	@make -C gnutls -f Makefile.static clean
+	@make -C openssl -f Makefile.static clean
 	@make -C libimobiledevice -f Makefile.static clean
 	@make -C curl -f Makefile.static clean
 
