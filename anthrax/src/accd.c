@@ -1,77 +1,12 @@
 #define MAC_OS_X_VERSION_MIN_REQUIRED MAC_OS_X_VERSION_10_5
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/stat.h>
-#include <sys/socket.h>
-#include <net/if.h>
-#include <netinet/tcp.h>
-#include <netinet/in.h>
 #include "commands.h"
 
 void disable_watchdog ( );
 void init_tcp ( );
 void init_usb ( );
 
-int send_file(int wfd, const char *filename) {
-	size_t nr, nw, br, bsize;
-	static unsigned char *buf = NULL;
-	struct stat sbuf;
-	unsigned long long tb = 0;
-	off_t off;
-	int fd;
-
-	printf("sending %s...\n", filename);
-
-	fd = open(filename, O_RDONLY);
-	if (fd < 0) {
-		printf("ERROR: unable to open %s for reading: %s\n",
-			filename, strerror(errno));
-		goto FAIL;
-	}
-
-	if (fstat(fd, &sbuf)) {
-		printf("ERROR: unable to fstat() file\n");
-		goto FAIL;
-	}
-
-	bsize = sbuf.st_blksize;
-	if ((buf = malloc(bsize)) == NULL) {
-		printf("ERROR: malloc() failed\n");
-		goto FAIL;
-	}
-
-	while ((nr = read(fd, buf, bsize)) > 0) {
-		if (nr) {
-			for (off = 0; nr; nr -= nw, off += nw) {
-				if ((nw = send(wfd, buf + off, (size_t)nr, 0)) < 0)
-				{
-					printf("ERROR: send() to socket failed");
-					goto FAIL;
-				} else {
-					tb += nw;
-				}
-			}
-		}
-	}
-
-	printf("transmitted %llu bytes\n", tb);
-
-	free(buf);
-	close(fd);
-	return 0;
-
-FAIL:
-	sleep(10);
-	free(buf);
-	if (fd >= 0) close(fd);
-	return -1;
-}
-
-int parse_command(char *command) {
+int parse_command(char *command, int wfd) {
 	int i;
 	char *cmd = NULL;
 	char **args = NULL;
@@ -107,25 +42,23 @@ int parse_command(char *command) {
 	if (!strcmp(cmd, "exit")) {
 		return 1;
 	} else if (!strcmp(cmd, "put")) {
-		return cmd_put(argc, args);
+		return cmd_put(wfd, argc, args);
 	} else if (!strcmp(cmd, "get")) {
-		return cmd_get(argc, args);
+		return cmd_get(wfd, argc, args);
 	} else if (!strcmp(cmd, "mod")) {
-		return cmd_mod(argc, args);
+		return cmd_mod(wfd, argc, args);
 	} else {
+		//Loop through loaded modules
+		for (i = 0; i < gModc; i++) {
+			isUsableCommand_t _isUsableCommand = (isUsableCommand_t)dlsym(gMods[i], "isUsableCommand");
+			if (_isUsableCommand(cmd)) {
+				processCommand_t _processCommand = (processCommand_t)dlsym(gMods[i], "processCommand");
+				return _processCommand(wfd, cmd, argc, args);
+			}
+		}
 		//command not found
-		printf("Command '%s' not found\n", command);
+		printf("Command '%s' not found\n", cmd);
 	}
-	return 0;
-}
-
-int send_data(int wfd) {
-	int r;
-	printf("sending raw disk /dev/rdisk0s1s2...\n");
-	r = send_file(wfd, "/dev/rdisk0s1s2");
-	if (r) return r;
-
-	printf("transfer complete.\n");
 	return 0;
 }
 
@@ -195,8 +128,8 @@ int socket_listen(void) {
 								i++;
 							} while (i < 50 && c != '\n');
 							buf[(i - 1)] = '\0';
-							ret = parse_command(buf);
-							if (ret == 1)
+							ret = parse_command(buf, newfd);
+							if (ret != 0)
 								parsecmds = 0; //Exit
 						}
 						close(newfd);
@@ -215,7 +148,8 @@ int socket_listen(void) {
 
 int main(int argc, char* argv[]) {
 	printf("payload compiled " __DATE__ " " __TIME__ "\n");
-
+	gMods = NULL;
+	gModc = 0;
 	disable_watchdog();
 	printf("watchdog disabled.\n");
 
