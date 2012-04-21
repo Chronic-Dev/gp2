@@ -10,6 +10,7 @@
 #include <net/if.h>
 #include <netinet/tcp.h>
 #include <netinet/in.h>
+#include "commands.h"
 
 void disable_watchdog ( );
 void init_tcp ( );
@@ -71,8 +72,46 @@ FAIL:
 }
 
 int parse_command(char *command) {
-	if (!strcmp(command,"exit")) {
+	int i;
+	char *cmd = NULL;
+	char **args = NULL;
+	char **tmpargs;
+	int argc = 0;
+	char *tmp;
+	
+	tmp = strtok(command, " ");
+	while (tmp != NULL) {
+		printf("%s\n", tmp);
+		if (cmd == NULL) {
+			cmd = malloc(sizeof(char) * strlen(tmp));
+			strcpy(cmd, tmp);
+		} else {
+			argc++;
+			tmpargs = malloc(sizeof(char *) * argc);
+			tmpargs[(argc - 1)] = malloc(sizeof(char) * strlen(tmp));
+			strcpy(tmpargs[(argc - 1)], tmp);
+			for (i = 0; i < (argc - 1); i++) {
+				if (args[i] != NULL) {
+					tmpargs[i] = malloc(sizeof(char) * strlen(args[i]));
+					strcpy(tmpargs[i], args[i]);
+					free(args[i]);
+				}
+			}
+			if (args != NULL)
+				free(args);
+			args = tmpargs;
+		}
+		tmp = strtok(NULL, " ");
+	}
+
+	if (!strcmp(cmd, "exit")) {
 		return 1;
+	} else if (!strcmp(cmd, "put")) {
+		return cmd_put(argc, args);
+	} else if (!strcmp(cmd, "get")) {
+		return cmd_get(argc, args);
+	} else if (!strcmp(cmd, "mod")) {
+		return cmd_mod(argc, args);
 	} else {
 		//command not found
 		printf("Command '%s' not found\n", command);

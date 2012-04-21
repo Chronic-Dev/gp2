@@ -53,9 +53,10 @@ launchd: $(LAUNCHD_OBJECTS)
 
 accd:
 	@echo "Building accd..."
+	@$(CC) -c -o commands.o commands.c $(CFLAGS)
 	@$(CC) -c -o watchdog.o watchdog.c $(CFLAGS) -F/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/
 	@$(CC) -c -o usbmux.o usbmux.c $(CFLAGS) -F/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/
-	@$(CC) -o $(ACCD_TARGET) accd.c watchdog.o usbmux.o $(CFLAGS) -framework IOKit -framework CoreFoundation
+	@$(CC) -o $(ACCD_TARGET) accd.c commands.o watchdog.o usbmux.o $(CFLAGS) -framework IOKit -framework CoreFoundation
 	@$(STRIP) $(ACCD_TARGET)
 	@ldid -S $(ACCD_TARGET)
 

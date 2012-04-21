@@ -20,7 +20,7 @@ clean:
 	@make -C libs/ clean
 	@make -C payloads/ clean
 	@make -C exploits/ clean
-	#@make -C anthrax/ clean
+	@make -C anthrax/ clean
 	@make -C syringe/ clean
 	@make -C doctors/ clean
 
