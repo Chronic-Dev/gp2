@@ -11,3 +11,6 @@ payloads/cyanide/payloads/
 .DS_Store
 libs/staticlibs/
 *.pro.user
+accd
+launchd
+*.swp
