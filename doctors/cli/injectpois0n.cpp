@@ -33,12 +33,20 @@ int main(int argc, char **args) {
 						device = iD_3GS_NEW;
 					} else if (!strcmp(args[i], "IPT3G")) {
 						device = iD_IPT3G;
-					} else if (!strcmp(args[i], "A4")) {
-						device = iD_A4;
+					} else if (!strcmp(args[i], "4")) {
+						device = iD_4;
+					} else if (!strcmp(args[i], "IPAD")) {
+						device = iD_IPAD;
+					} else if (!strcmp(args[i], "ATV2")) {
+						device = iD_ATV2;
 					} else if (!strcmp(args[i], "IPAD2")) {
 						device = iD_IPAD2;
 					} else if (!strcmp(args[i], "IPT4G")) {
 						device = iD_IPT4G;
+					} else if (!strcmp(args[i], "IPAD3")) {
+						device = iD_IPAD3;
+					} else if (!strcmp(args[i], "ATV3")) {
+						device = iD_ATV3;
 					} else {
 						i--;
 						cout << "Invalid option for " << args[i] << endl;
@@ -50,9 +58,13 @@ int main(int argc, char **args) {
 						cout << "\t3GS_OLD - iPhone 3GS (old bootrom)" << endl;
 						cout << "\t3GS_NEW - iPhone 3GS (new bootrom)" << endl;
 						cout << "\tIPT3G   - iPod Touch (thrid gen)" << endl;
-						cout << "\tA4      - Any A4 device (iPhone 4, iPad)" << endl;
+						cout << "\t4       - iPhone 4" << endl;
+						cout << "\tIPAD    - iPad" << endl;
+						cout << "\tATV2    - AppleTV 2" << endl;
 						cout << "\tIPAD2   - iPad 2" << endl;
 						cout << "\tIPT4G   - iPod Touch (fourth gen)" << endl;
+						cout << "\tIPAD3   - iPad 3" << endl;
+						cout << "\tATV3    - AppleTV 3" << endl;
 						return 0;
 					}
 					useCustomDevice = 1;
