@@ -202,6 +202,11 @@ bool Syringe::deviceIsReady() {
 	} catch (SyringeBubble &b) {
 		throw b;
 	}
+
+	if (etype == eUSERLAND) {
+		return true;
+	}
+
 	irecv_init();	
 	irecv_error_t error = IRECV_E_SUCCESS;
 	irecv_client_t client = NULL;
