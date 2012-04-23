@@ -113,11 +113,19 @@ void DeviceDetection::assignValue(char *value, char *forKey) {
 		} else if (val == "N81AP") {
 			hwVersion = iD_IPT4G;
 		} else if (val == "K48AP") {
-			hwVersion = iD_A4;
-		} else if (val == "K93AP" || val == "K94AP" || val == "K95AP") {
+			hwVersion = iD_IPAD;
+		} else if (val == "K93AP" || val == "K94AP" || val == "K95AP" || val == "K93AAP") {
 			hwVersion = iD_IPAD2;
-		} else if (val == "K66AP" /*ATV*/ || val == "N90AP" || val == "N92AP") {
-			hwVersion = iD_A4;
+		} else if (val == "J1AP" || val == "J2AP" || val == "J2AAP") {
+			hwVersion = iD_IPAD3;
+		} else if (val == "K66AP") { /*ATV*/ 
+			hwVersion = iD_ATV2;
+		} else if (val == "J33AP") {
+			hwVersion = iD_ATV3;
+		} else if (val == "N90AP" || val == "N92AP") {
+			hwVersion = iD_4;
+		} else if (val == "N94AP") {
+			hwVersion = iD_4S;
 		} else {
 			cout << "DEVELOPER MESSAGE: Undefined hardware model. Please fixme before release!" << endl;
 		}
