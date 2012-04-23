@@ -1,9 +1,14 @@
-* Implement Syringe in C++ with dynamic library loading (Jaywalker)
-* Implement Userland communications in Syringe++ (Jaywalker)
-* Ensure Syringe++ is Cross-Platform (dyld, etc.) (Jaywalker)
-* Implement USB Transfer Library for Anthrax (westbaer)
-* Implement USB Transfer Proto Base-Class in Syringe++ (Jaywalker)
-* Add USB Transfer Proto to Syringe++ (westbaer)
+* Replace make system with autotools
+* Make build system work on win/mac/linux
+* Ensure Syringe properly works with all boot options up to U_RAMDISK (test with limera1n)
+* Build in support for ARMv6 in cyanide
+* Finish pwnage2
+* Finish SHAtter
+* Build libacc
+* Implement all necessary medicine
+* Finish GUI
+* Check all FIXME's and TODO's
+* Fix absinthe to do the bare minimums to execute accd
 * In DeviceDetection::assignValue, Use plist with libplist rather than hardcoded values for detection things (Someone else please... :))
 
   /////////////////
