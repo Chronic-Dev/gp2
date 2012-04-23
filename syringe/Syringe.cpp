@@ -150,6 +150,8 @@ int Syringe::preloadExploits() {
 	for (i = 0; i < exploitCount; i++) {
 		_isBuildSupported = (isBuildSupported_t)dlsym(exploits[i], "isBuildSupported");
 		_getTargets = (getTargets_t)dlsym(exploits[i], "getTargets");
+		if (_isBuildSupported == NULL || _getTargets == NULL)
+			throw SyringeBubble("Exploit appears be corrupted, please run the updater to fix this");
 		if ((pois0n_device & _getTargets()) && _isBuildSupported(pois0n_build)) {
 			usableExploits[usableExploitCount] = exploits[i];
 			usableExploitCount++;
