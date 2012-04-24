@@ -161,10 +161,14 @@ void FirmwareUploader::FetchImage(char *type, char *output) {
 	} else {
 		if (!strcmp(type, "iBoot") || !strcmp(type, "LLB")) {
 			snprintf(name, 63, "%s.%s.RELEASE.img3", type, device->model);
+			snprintf(path, 254, "Firmware/all_flash/all_flash.%s.production/%s", device->model, name);
 		} else {
-			snprintf(name, 63, "%s.%s.img3", type, device->model);
+			snprintf(name, 63, "%s.release.%s", type, device->model);
+			char* end = strstr(name, "ap");
+			end[0] = '\0';
+			snprintf(path, 254, "%s", name);
 		}
-		snprintf(path, 254, "Firmware/all_flash/all_flash.%s.production/%s", device->model, name);
+
 	}
 
 	if (ipsw == NULL) {
